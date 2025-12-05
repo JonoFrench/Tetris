@@ -10,9 +10,10 @@ import SwiftData
 
 @main
 struct TetrisApp: App {
+    @StateObject private var manager = GameManager()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            GameScore.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,8 +26,9 @@ struct TetrisApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environmentObject(manager)
         }
         .modelContainer(sharedModelContainer)
+        
     }
 }
