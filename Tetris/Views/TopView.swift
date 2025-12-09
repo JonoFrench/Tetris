@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct TopView: View {
+    @EnvironmentObject var manager: GameManager
     var body: some View {
         ZStack(alignment: .top) {
             VStack {
                 Color(.clear)
-                Text("Score:\(String(format: "%07d", 7)) Top:\(String(format: "%07d", 0))")
+                Text("Score:\(String(format: "%07d", manager.score)) Top:\(String(format: "%07d", manager.topScore))")
                     .font(.custom("DonkeyKongClassicsNESExtended", size: 14))
                     .foregroundStyle(.white)
                 Spacer()
-                Text("Level:\(String(format: "%03d", 0)) Lines:\(String(format: "%04d", 4))")
+                Text("Level:\(String(format: "%03d", manager.level)) Lines:\(String(format: "%04d", manager.lines))")
                     .font(.custom("DonkeyKongClassicsNESExtended", size: 14))
                     .foregroundStyle(.white)
                 Spacer()

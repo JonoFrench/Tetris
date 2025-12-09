@@ -15,9 +15,15 @@ final class GameManager: ObservableObject {
     // MARK: - Published Properties
     @Published var gameState: GameState = .intro
     @Published var score = 0
-//    let soundFX:SoundFX = SoundFX()
+    @Published var lines = 0
+    @Published var level = 0
+    var topScore = 0
+
+    let soundFX:SoundFX = SoundFX()
     @Published
     var screenData:[[Color?]] = [[]]
+    @Published var clearingRows: Set<Int> = []
+
     var blockImages:[Image] = []
     let screenDimensionX = 10
     let screenDimensionY = 20.0
@@ -41,6 +47,7 @@ final class GameManager: ObservableObject {
     var lCount = 0
     var jCount = 0
     var tCount = 0
+    var tetroCounters:[Int] = [0,0,0,0,0,0,0]
 
     let oTetrominio:[[Color?]] = [[nil,nil,nil,nil],
                                   [nil,.red,.red,nil],
@@ -71,6 +78,7 @@ final class GameManager: ObservableObject {
                                   [nil,nil,.orange,nil],
                                   [nil,nil,nil,nil]]
     var tetroPick:[[[Color?]]] = []
+    var tetroKind:[Kind] = []
     let leftOffset =  [1,1,2,1,1,1,1]
     let rightOffset = [9,10,9,8,9,9,8]
     var checkPointsX:[Int] = []
@@ -78,7 +86,8 @@ final class GameManager: ObservableObject {
     let addOffset = [-1,-1,0,0,0,0,0]
     
     init() {
-//        setBlockImages()
+        tetroPick = [oTetrominio,iTetrominio,sTetrominio,zTetrominio,lTetrominio,jTetrominio,tTetrominio]
+        tetroKind = [Kind.O,Kind.I,Kind.S,Kind.Z,Kind.L,Kind.J,Kind.T]
         setupSharedServices()
         setupDisplayLink()
         setNotificationObservers()
@@ -107,6 +116,7 @@ final class GameManager: ObservableObject {
     func startGame() {
         setScreenData()
         gameState = .playing
+        soundFX.backgroundSound()
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(0.5))
             setTetronimo()
@@ -114,7 +124,8 @@ final class GameManager: ObservableObject {
     }
     
     @objc func nextTetromino(notification: Notification) {
-        compactRows(in: &screenData)
+        //compactRows(in: &screenData)
+        clearFullRows()
         self.setTetronimo()
     }
     
@@ -130,31 +141,52 @@ final class GameManager: ObservableObject {
     
     func setTetronimo() {
         var n = Int.random(in: 0...6) // shape
+        n = 1
         var posX = Int.random(in: leftOffset[n]...rightOffset[n]) // position
         if currentTetrominio != nil {
             self.currentTetrominio = nextTetrominio
-            nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n])
+            nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
         }
         else
         {
-            currentTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n])
+            currentTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
             n = Int.random(in: 0...6)
+            n = 1
             posX = Int.random(in: leftOffset[n]...rightOffset[n])
-            nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n])
+            nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
         }
         print("frame \(n.description) dropping from \(posX)")
     }
     
     func setScreenData() {
-        tetroPick = [oTetrominio,iTetrominio,sTetrominio,zTetrominio,lTetrominio,jTetrominio,tTetrominio]
 
         screenData.removeAll()
         screenData = Array(
             repeating: Array(repeating: nil, count: arrayDimentionX),
             count: arrayDimentionY
         )
-        
-//        screenData[27][0] = .red
+        tetroCounters = [0,0,0,0,0,0,0]
+
+        screenData[27][0] = .red
+        screenData[27][1] = .red
+        screenData[27][2] = .red
+        screenData[27][3] = .red
+        screenData[27][4] = .red
+        screenData[27][6] = .red
+        screenData[27][7] = .red
+        screenData[27][8] = .red
+        screenData[27][9] = .red
+
+        screenData[26][0] = .red
+        screenData[26][1] = .red
+        screenData[26][2] = .red
+        screenData[26][3] = .red
+        screenData[26][4] = .red
+        screenData[26][6] = .red
+        screenData[26][7] = .red
+        screenData[26][8] = .red
+        screenData[26][9] = .red
+
 //        screenData[27][9] = .blue
 //        screenData[8][0] = .yellow
 //        screenData[8][9] = .green
@@ -169,27 +201,7 @@ final class GameManager: ObservableObject {
 
     }
     
-//    func setBlockImages() {
-//        blockImages.removeAll()
-//        for i in 0..<7 {
-//            blockImages.append(getTileImage(name: "Blocks", pos: Int.random(in: 0...6), y: 0)!)
-//        }
-//        
-//        gridImages = [blockImages[0],blockImages[0],blockImages[0],blockImages[0],blockImages[0],blockImages[0],nil,blockImages[0],blockImages[0],blockImages[0],blockImages[0],nil,blockImages[0],blockImages[0],blockImages[0],blockImages[0]]
-//    }
-//  
-//    func getTileImage(name: String, pos: Int, y: Int) -> Image? {
-//        guard let uiImage = getTile(name: name, pos: pos, y: y) else { return nil }
-//        return Image(uiImage: uiImage)
-//    }
-//    
-//    func getTile(name:String,pos:Int,y:Int) -> UIImage? {
-//        guard let image = UIImage(named: name) else { return nil }
-//        let rect = CGRect(x: pos * 8, y: y * 8, width: 8, height: 8)
-//        guard let cgImage = image.cgImage?.cropping(to: rect) else { return nil }
-//        return UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)
-//    }
-    
+ 
     /// Places a block into a larger 2D array at (x, y),
     /// skipping out-of-bounds writes and skipping nils in the block.
     func placeTetromino(
@@ -217,7 +229,24 @@ final class GameManager: ObservableObject {
         }
     }
 
+    func rotateL() {
+        if let currentTetrominio {
+            currentTetrominio.rotateTetromino(tet: &self.currentTetrominio!, grid: screenData, direction: .ccw)
+        }
+        
 
+        //manager.rotateTetrominoL(&tetrominioArray)
+    }
+    
+    func rotateR() {
+        if let currentTetrominio {
+            currentTetrominio.rotateTetromino(tet: &self.currentTetrominio!, grid: screenData, direction: .cw)
+        }
+        
+        //manager.rotateTetrominoR(&tetrominioArray)
+        
+    }
+    
     func rotateTetrominoR(_ block: inout [[Color?]]) {
         precondition(block.count == 4 && block.allSatisfy { $0.count == 4 })
 
@@ -323,7 +352,50 @@ func compactRows(in grid: inout [[Color?]]) {
         grid = Array(repeating: emptyRow, count: removedCount) + nonFullRows
     }
 
+    func clearFullRows() {
+        let rowsToClear = detectFullRows(in: self.screenData)         // your logic
+
+        // Start animation
+        withAnimation {
+            clearingRows = Set(rowsToClear)
+            if !clearingRows.isEmpty {
+                self.soundFX.clearRowSound()
+            }
+        }
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.15))
+            withAnimation {
+                self.compactRows(in: &self.screenData)
+            }
+            self.clearingRows.removeAll()
+        }
+            
+//        // After animation finishes → modify grid
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+//            withAnimation {
+//                self.compactRows(in: &self.screenData)
+//                self.soundFX.clearRowSound()
+//            }
+//            self.clearingRows.removeAll()
+//        }
+    }
+    func detectFullRows(in grid: [[Color?]]) -> [Int] {
+        var result: [Int] = []
+        
+        for (rowIndex, row) in grid.enumerated() {
+            // A full row has NO nil values
+            let isFull = !row.contains(where: { $0 == nil })
+
+            if isFull {
+                result.append(rowIndex)
+            }
+        }
+
+        return result
+    }
+
     
+
     
 }
 

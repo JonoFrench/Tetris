@@ -18,10 +18,12 @@ struct GameView: View {
         let _ = manager.rotateTetrominoL(&srot)
         let _ = manager.rotateTetrominoL(&zrot)
         let _ = manager.rotateTetrominoL(&trot)
-
+        
         ZStack(alignment: .center) {
             HStack(alignment: .center) {
-                ScreenView()
+                ScreenView().overlay(){
+                    //OverlayView().zIndex(10)
+                }
                 VStack(alignment: .center) {
                     
                 }.background(.black)
@@ -31,7 +33,6 @@ struct GameView: View {
                     Text("Stats")
                         .font(.custom("DonkeyKongClassicsNESExtended", size: 10))
                         .foregroundStyle(.white)
-
                     CountView(counter: manager.iCount, shape: irot)
                         .frame(width:80,height: 80)
                     CountView(counter: manager.oCount, shape: manager.oTetrominio)
@@ -52,10 +53,10 @@ struct GameView: View {
             }.zIndex(0.1)
             if let currentTetrominio = manager.currentTetrominio {
                 TetrominoView(manager: _manager, tetromino: currentTetrominio)
-                    .zIndex(2.0)
+//                    .zIndex(2.0)
             }
         }//.zIndex(0.1).background(.black.gradient)
-         //   .position(x: UIScreen.main.bounds.width / 2, y:284)
+        //   .position(x: UIScreen.main.bounds.width / 2, y:284)
     }
 }
 

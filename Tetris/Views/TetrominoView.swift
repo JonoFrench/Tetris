@@ -28,10 +28,8 @@ struct TetrominoView: View {
                         }
                     }
                 }
-                
             }.position(x:tetromino.position.x,y: tetromino.position.y)
-                .zIndex(3.0)
-        }
+        }.zIndex(0.1)
     }
 }
 

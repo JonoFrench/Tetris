@@ -11,7 +11,7 @@ import UIKit
 
 struct ScreenView: View {
     @EnvironmentObject var manager: GameManager
-    //    @ObservedObject var gameScreen: ScreenData
+//    @ObservedObject var gameScreen: ScreenData
     var body: some View {
         VStack(spacing: 0) {
                 ZStack(alignment: .center)  {
@@ -23,6 +23,10 @@ struct ScreenView: View {
                                         Rectangle()
                                             .fill(c)
                                             .border(.black)
+                                            .opacity(manager.clearingRows.contains(y) ? 0 : 1)      // fade out
+                                            .scaleEffect(manager.clearingRows.contains(y) ? 0.01 : 1) // shrink
+                                            .animation(.easeOut(duration: 0.15), value: manager.clearingRows)
+
                                     } else {
                                         Rectangle().fill(.clear)
                                     }
@@ -31,7 +35,7 @@ struct ScreenView: View {
                         }
                     }.background(.black)
                 }.anchorPreference(key: BoundsKey.self, value: .bounds) { $0 }
-            }
+        }//.zIndex(1.0)
             .backgroundPreferenceValue(BoundsKey.self) { anchor in
                 GeometryReader { proxy in
                     if let anchor {
@@ -42,7 +46,7 @@ struct ScreenView: View {
                         }
                     }
                 }
-            }.border(.white, width: 1.0)
+            }.border(.white, width: 1.0).zIndex(1.0)
             //.sideBorder(color: .white, width: 1, sides: .left, .right, .top)
     }
 }
@@ -53,7 +57,6 @@ struct BoundsKey: PreferenceKey {
         value = nextValue()
     }
 }
-
 
 struct SideBorder: ViewModifier {
     var color: Color = .black
