@@ -9,9 +9,11 @@ import Foundation
 import QuartzCore
 import SwiftUI
 import Combine
+import SwiftData
 
 @MainActor
 final class GameManager: ObservableObject {
+    @Environment(\.modelContext) private var context
     // MARK: - Published Properties
     @Published var gameState: GameState = .intro
     @Published var score = 0
@@ -22,7 +24,8 @@ final class GameManager: ObservableObject {
     let soundFX:SoundFX = SoundFX()
     @Published
     var screenData:[[Color?]] = [[]]
-    @Published var clearingRows: Set<Int> = []
+    @Published
+    var clearingRows: Set<Int> = []
 
     var blockImages:[Image] = []
     let screenDimensionX = 10
@@ -40,13 +43,6 @@ final class GameManager: ObservableObject {
     var gridImages:[Image?] = []
     let gridColours:[Color] = [.red,.blue,.green,.yellow,.cyan,.purple,.orange,.white]
     var nextTetrominioArray: [[Color?]] = [[]]
-    var iCount = 0
-    var oCount = 0
-    var sCount = 0
-    var zCount = 0
-    var lCount = 0
-    var jCount = 0
-    var tCount = 0
     var tetroCounters:[Int] = [0,0,0,0,0,0,0]
 
     let oTetrominio:[[Color?]] = [[nil,nil,nil,nil],
@@ -77,13 +73,18 @@ final class GameManager: ObservableObject {
                                   [nil,.orange,.orange,.orange],
                                   [nil,nil,.orange,nil],
                                   [nil,nil,nil,nil]]
+
     var tetroPick:[[[Color?]]] = []
     var tetroKind:[Kind] = []
     let leftOffset =  [1,1,2,1,1,1,1]
     let rightOffset = [9,10,9,8,9,9,8]
-    var checkPointsX:[Int] = []
-    var checkPointsY:[Int] = []
-    let addOffset = [-1,-1,0,0,0,0,0]
+    
+    var irot:[[Color?]] = [[]]
+    var srot:[[Color?]] = [[]]
+    var zrot:[[Color?]] = [[]]
+    var trot:[[Color?]] = [[]]
+
+    
     
     init() {
         tetroPick = [oTetrominio,iTetrominio,sTetrominio,zTetrominio,lTetrominio,jTetrominio,tTetrominio]
@@ -125,8 +126,12 @@ final class GameManager: ObservableObject {
     
     @objc func nextTetromino(notification: Notification) {
         //compactRows(in: &screenData)
-        clearFullRows()
         self.setTetronimo()
+        clearFullRows()
+    }
+    
+    @objc func gameOver(notification: Notification) {
+        gameState = .gameover
     }
     
     /// Main loop of game. Tied to screen refresh.
@@ -138,24 +143,30 @@ final class GameManager: ObservableObject {
             }
         }
     }
+
+    func checkFull() -> Bool {
+        print("game over check \(screenData[4])")
+        return screenData[4].allSatisfy{ $0 == nil }
+    }
+    
+
     
     func setTetronimo() {
-        var n = Int.random(in: 0...6) // shape
-        n = 1
-        var posX = Int.random(in: leftOffset[n]...rightOffset[n]) // position
-        if currentTetrominio != nil {
-            self.currentTetrominio = nextTetrominio
-            nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
+        if !checkFull() {
+            gameState = .gameover
+            print("game over")
+            return
         }
-        else
-        {
-            currentTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
-            n = Int.random(in: 0...6)
-            n = 1
-            posX = Int.random(in: leftOffset[n]...rightOffset[n])
-            nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
-        }
-        print("frame \(n.description) dropping from \(posX)")
+        let n = Int.random(in: 0...6)
+//            n = 1
+        let posX = Int.random(in: leftOffset[n]...rightOffset[n])
+
+        self.currentTetrominio = nextTetrominio
+        //print("setTetronimo currentTetrominio \(currentTetrominio?.kind) dropping from \(posX)")
+        nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
+        //print("setTetronimo nextTetrominio \(nextTetrominio?.kind)")
+        //print("frame \(n.description) dropping from \(posX)")
+        tetroCounters[currentTetrominio!.kind.rawValue] += 1
     }
     
     func setScreenData() {
@@ -166,7 +177,20 @@ final class GameManager: ObservableObject {
             count: arrayDimentionY
         )
         tetroCounters = [0,0,0,0,0,0,0]
+        irot = iTetrominio
+        srot = sTetrominio
+        zrot = zTetrominio
+        trot = tTetrominio
 
+        let _ = self.rotateTetrominoL(&irot)
+        let _ = self.rotateTetrominoL(&srot)
+        let _ = self.rotateTetrominoL(&zrot)
+        let _ = self.rotateTetrominoL(&trot)
+
+        let n = Int.random(in: 0...6)
+//            n = 1
+        let posX = Int.random(in: leftOffset[n]...rightOffset[n])
+        nextTetrominio = Tetromino(xPos: posX, yPos: -3, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
         screenData[27][0] = .red
         screenData[27][1] = .red
         screenData[27][2] = .red
@@ -390,17 +414,44 @@ func compactRows(in grid: inout [[Color?]]) {
                 result.append(rowIndex)
             }
         }
-
+        lines += result.count
         return result
     }
-
     
+    func addScore(rows: Int, score: Int, level: Int, name: String) {
+        let gameScore = GameScore(timestamp: Date(), rows:rows,score: score,level: level,name: "")
+        gameScore.rows = rows
+        gameScore.score = score
+        gameScore.level = level
+        gameScore.name = name
 
+        context.insert(gameScore)
+
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save: \(error)")
+        }
+    }
     
+    func fetchTopScores(context: ModelContext) -> [GameScore] {
+        var descriptor = FetchDescriptor<GameScore>(
+            sortBy: [SortDescriptor(\.score, order: .reverse)])
+        
+        descriptor.fetchLimit = 10
+
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            print("Fetch failed: \(error)")
+            return []
+        }
+    }
 }
 
 extension Notification.Name {
     static let notificationNextTetromino = Notification.Name("NotificationNextTetromino")
+    static let notificationGameOver = Notification.Name("NotificationGameOver")
 }
 
 
@@ -408,5 +459,10 @@ extension GameManager {
     
     func setNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.nextTetromino(notification:)), name: .notificationNextTetromino, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.gameOver(notification:)), name: .notificationGameOver, object: nil)
+
     }
+    
+    
+    
 }

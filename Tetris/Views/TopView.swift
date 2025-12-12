@@ -13,7 +13,7 @@ struct TopView: View {
         ZStack(alignment: .top) {
             VStack {
                 Color(.clear)
-                Text("Score:\(String(format: "%07d", manager.score)) Top:\(String(format: "%07d", manager.topScore))")
+                Text("Score:\(String(format: "%07d", manager.score))")
                     .font(.custom("DonkeyKongClassicsNESExtended", size: 14))
                     .foregroundStyle(.white)
                 Spacer()

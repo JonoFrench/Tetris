@@ -9,7 +9,7 @@ import CoreGraphics
 import SwiftUI
 
 public enum GameState {
-    case intro,playing,highscore,levelend,progress,progress10,extralife
+    case intro,playing,highscore,paused,gameover
 }
 
 public enum JoyPad {

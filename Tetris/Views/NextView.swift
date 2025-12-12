@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct NextView: View {
+    @EnvironmentObject var manager: GameManager
     var shape:[[Color?]]
     
     var body: some View {
@@ -40,6 +41,9 @@ struct NextView: View {
                     
                 }.border(.white)
             }
+        }.onTapGesture {
+            print("diving down")
+            manager.currentTetrominio?.dropMove = true
         }
         
     }

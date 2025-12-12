@@ -28,8 +28,8 @@ struct TetrominoView: View {
                         }
                     }
                 }
-            }.position(x:tetromino.position.x,y: tetromino.position.y)
-        }.zIndex(0.1)
+            }.position(x:tetromino.position.x,y: tetromino.position.y).zIndex(0.5)
+        }
     }
 }
 

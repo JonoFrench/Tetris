@@ -17,7 +17,7 @@ protocol TetrominoProtocol:ObservableObject {
     func draw()
 }
 
-enum Kind { case I, O, J, L, S, T, Z }
+enum Kind: Int { case I = 0, O = 1, J = 2, L = 3, S = 4, T = 5, Z = 6 }
 
 class Tetromino: TetrominoProtocol {
     
@@ -31,12 +31,14 @@ class Tetromino: TetrominoProtocol {
     var manager: GameManager
     var tetrominioArray: [[Color?]]
     var moveDistance = 0.0
+    var currentSpeed = 20.0
     var speedCounter: Int = 0
     var stopmove = false
+    var dropMove = false
     
     @Published
     var position = CGPoint()
-
+    
     var blocks:[Block] = []
     
     let JLSTZ_KICKS: [Int: [(dx: Int, dy: Int)]] = [
@@ -46,16 +48,16 @@ class Tetromino: TetrominoProtocol {
         2: [(0,0), (+1,0), (+1,+1), (0,-2), (+1,-2)],
         3: [(0,0), (-1,0), (-1,-1), (0,+2), (-1,+2)]
     ]
-
+    
     let I_KICKS: [Int: [(dx: Int, dy: Int)]] = [
         0: [(0,0), (-2,0), (+1,0), (-2,-1), (+1,+2)],
         1: [(0,0), (-1,0), (+2,0), (-1,+2), (+2,-1)],
         2: [(0,0), (+2,0), (-1,0), (+2,+1), (-1,-2)],
         3: [(0,0), (+1,0), (-2,0), (+1,-2), (-2,+1)]
     ]
-
+    
     let O_KICKS = [(0,0)]
-
+    
     init(xPos: Int, yPos: Int, manager:GameManager,tetrominioArray:[[Color?]],kind:Kind) {
         self.manager = manager
         self.xPos = xPos
@@ -64,7 +66,7 @@ class Tetromino: TetrominoProtocol {
         self.yBoard = yPos + 7
         self.tetrominioArray = tetrominioArray
         self.position = CGPoint(x: Double(xPos) * manager.assetDimension + 13, y: Double(yPos) * manager.assetDimension)
-        self.moveDistance = manager.assetDimension / 20.0
+        self.moveDistance = manager.assetDimension / currentSpeed
         self.kind = kind
     }
     
@@ -72,32 +74,46 @@ class Tetromino: TetrominoProtocol {
         guard !stopmove else {
             return
         }
-        self.speedCounter += 1
-        self.position.y += moveDistance
-        if self.speedCounter == 20 {
-            print("yPos: \(yPos)")
+        if dropMove {
+            let dropDiff = Int(currentSpeed) - self.speedCounter
+            dropMove = false
+            self.position.y += Double(dropDiff) * moveDistance
             self.speedCounter = 0
-            if yPos < 18 {
-                if checkBoard() { stopTetromino() } else {
-                    yPos += 1
-                    yBoard += 1
+            moveDistance = manager.assetDimension
+            currentSpeed = 1
+            yPos += 1
+            yBoard += 1
+        } else {
+            self.speedCounter += 1
+            self.position.y += moveDistance
+            if self.speedCounter == Int(currentSpeed) {
+                //            print("yPos: \(yPos)")
+                self.speedCounter = 0
+                if yPos < 18 {
+                    if checkBoard() { stopTetromino() } else {
+                        yPos += 1
+                        yBoard += 1
+                    }
+                } else {
+                    stopTetromino()
                 }
-            } else {
-                stopTetromino()
             }
         }
     }
     
     func stopTetromino() {
         stopmove = true
+//        if yPos >= 2 {
+//            manager.gameState = .gameover
+//        } else {
         addBoard()
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(1))
-            NotificationCenter.default.post(name: .notificationNextTetromino, object: nil)
-            stopmove = false
-            speedCounter = 0
-            
-        }
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(1))
+                NotificationCenter.default.post(name: .notificationNextTetromino, object: nil)
+                stopmove = false
+                speedCounter = 0
+            }
+ //       }
     }
     
     func checkBoard() -> Bool {
@@ -111,6 +127,10 @@ class Tetromino: TetrominoProtocol {
             }
         }
         return false
+    }
+    
+    func checkFull() -> Bool {
+        return manager.screenData[4].allSatisfy{ $0 == nil }
     }
     
     func addBoard() {
@@ -145,7 +165,8 @@ class Tetromino: TetrominoProtocol {
     }
     
     func drop() {
-        
+        self.moveDistance = manager.assetDimension / 20.0
+
     }
     
     func draw() {

@@ -9,14 +9,15 @@ import SwiftUI
 
 struct OverlayView: View {
     var body: some View {
-        Color.black.opacity(0.4)
-        Text("Paused")
-            .font(.custom("DonkeyKongClassicsNESExtended", size: 18))
-            .foregroundStyle(.white)
-
+        ZStack {
+            Color.black.opacity(0.4)
+            Text("Paused")
+                .font(.custom("DonkeyKongClassicsNESExtended", size: 18))
+                .foregroundStyle(.white)
+            
+        }.zIndex(1.0)
     }
 }
-
 #Preview {
     OverlayView()
 }

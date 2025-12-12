@@ -77,7 +77,13 @@ struct ButtonView: View {
                 }
                 Spacer()
                 if let nextTetrominio = manager.nextTetrominio?.tetrominioArray {
-                    NextView(shape:nextTetrominio )
+                    if manager.nextTetrominio?.kind == .I {
+                        var irot = manager.iTetrominio
+                        let _ = manager.rotateTetrominoL(&irot)
+                        NextView(shape:irot)
+                    } else {
+                        NextView(shape:nextTetrominio)
+                    }
                 }
                 Spacer()
                 VStack {

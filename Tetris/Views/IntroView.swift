@@ -7,12 +7,18 @@
 
 
 import SwiftUI
+import Combine
 
 struct IntroView: View {
     static var starttextSize:CGFloat = 14
     @EnvironmentObject var manager: GameManager
     @State private var currentIndex = 0
     private let numberOfViews = 1
+    private let pages:[AnyView] = [
+        AnyView(Intro1View()),
+        AnyView(Intro2View()),
+        AnyView(Intro3View())
+    ]
     var body: some View {
         GeometryReader { proxy in
             VStack(alignment: .center) {
@@ -21,33 +27,26 @@ struct IntroView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
-                //Text("Tetris").font(.largeTitle) .foregroundStyle(.white.gradient)
+Spacer()
+                SmoothCarousel(pages: [
+                    AnyView(Intro1View()),
+                    AnyView(Intro2View()),
+                    AnyView(Intro3View())
+                ])
+//                .frame(height: 280)
                 Spacer()
-                Text("iOS SwiftUI Version")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
-                    .foregroundStyle(.white)
-                Spacer()
-                Text("Jonathan French 2025")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
-                    .foregroundStyle(.white)
-                Spacer()
-                Text("Tap to Play")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
-                    .foregroundStyle(.white)
-                    .onTapGesture {
-                        if manager.gameState == .intro {
-                            manager.startGame()
-                        }
-                    }
-                Spacer()
+
+            }.onTapGesture {
+                if manager.gameState == .intro {
+                    manager.startGame()
+                }
             }
             .onAppear {
-                print("tetris game size \(proxy.size)")
+                print("game size \(proxy.size)")
                 manager.gameSize = proxy.size
                 manager.setInit()
             }.background(.clear)
                 .frame(maxWidth: .infinity)
-
         }
     }
 }

@@ -18,7 +18,7 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     TopView()
                         .frame(width: UIScreen.main.bounds.width,height: 60, alignment: .center)
-                        .zIndex(3.0)
+                        .zIndex(0.1)
                         .background(.black)
                     if manager.gameState == .intro {
                         IntroView().background(.black)
@@ -33,7 +33,7 @@ struct ContentView: View {
 //                        .frame(maxWidth: .infinity,alignment: .center)
                         .frame(width: UIScreen.main.bounds.width,height: 120, alignment: .center)
                         //.frame(maxWidth: .infinity)
-                        .zIndex(2.0)
+                        .zIndex(0.1)
                         .background(.black)
                 }
             }

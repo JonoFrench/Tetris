@@ -13,7 +13,8 @@ struct ScreenView: View {
     @EnvironmentObject var manager: GameManager
 //    @ObservedObject var gameScreen: ScreenData
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .center) {
+            VStack(spacing: 0) {
                 ZStack(alignment: .center)  {
                     VStack(spacing: 0) {
                         ForEach(0..<20, id: \.self) { y in
@@ -26,7 +27,7 @@ struct ScreenView: View {
                                             .opacity(manager.clearingRows.contains(y) ? 0 : 1)      // fade out
                                             .scaleEffect(manager.clearingRows.contains(y) ? 0.01 : 1) // shrink
                                             .animation(.easeOut(duration: 0.15), value: manager.clearingRows)
-
+                                        
                                     } else {
                                         Rectangle().fill(.clear)
                                     }
@@ -35,19 +36,23 @@ struct ScreenView: View {
                         }
                     }.background(.black)
                 }.anchorPreference(key: BoundsKey.self, value: .bounds) { $0 }
-        }//.zIndex(1.0)
+            }//.zIndex(1.0)
             .backgroundPreferenceValue(BoundsKey.self) { anchor in
                 GeometryReader { proxy in
                     if let anchor {
                         let frame = proxy[anchor]
-                        Color.black.onAppear {
+                        Color.clear.onAppear {
                             manager.yPosOffset = (manager.gameSize.width - frame.width) / 2
                             print("tetris ZStack frame size: \(frame) offset: \(manager.yPosOffset)")
                         }
                     }
                 }
-            }.border(.white, width: 1.0).zIndex(1.0)
+            }.border(.white, width: 1.0).zIndex(0.2)
             //.sideBorder(color: .white, width: 1, sides: .left, .right, .top)
+            if let currentTetrominio = manager.currentTetrominio {
+                TetrominoView(manager: _manager, tetromino: currentTetrominio).zIndex(0.3)
+            }
+        }
     }
 }
 

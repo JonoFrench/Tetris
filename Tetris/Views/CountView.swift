@@ -34,13 +34,11 @@ struct CountView: View {
                             }
                         }
                     }
-                    
                 }
             }
             Text("\(String(format: "%04d", counter))")
-                .font(.custom("DonkeyKongClassicsNESExtended", size: 10))
+                .font(.custom("DonkeyKongClassicsNESExtended", size: 8))
                 .foregroundStyle(.white)
         }
-        
     }
 }
