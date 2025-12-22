@@ -20,7 +20,7 @@ struct ScreenView: View {
                         ForEach(0..<20, id: \.self) { y in
                             HStack(spacing: 0) {
                                 ForEach(0..<10, id: \.self) { x in
-                                    if let c = manager.screenData[y+8][x] {
+                                    if let c = manager.screenData[y+4][x] {
                                         Rectangle()
                                             .fill(c)
                                             .border(.black)
@@ -49,9 +49,11 @@ struct ScreenView: View {
                 }
             }.border(.white, width: 1.0).zIndex(0.2)
             //.sideBorder(color: .white, width: 1, sides: .left, .right, .top)
-            if let currentTetrominio = manager.currentTetrominio {
-                TetrominoView(manager: _manager, tetromino: currentTetrominio).zIndex(0.3)
-            }
+//            ZStack(alignment: .center) {
+//                if let currentTetrominio = manager.currentTetrominio {
+//                    TetrominoView(manager: _manager, tetromino: currentTetrominio).zIndex(0.3)
+//                }
+//            }.zIndex(0.4)
         }
     }
 }

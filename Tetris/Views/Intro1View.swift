@@ -9,18 +9,27 @@ import SwiftUI
 
 struct Intro1View: View {
     var body: some View {
-        VStack {
-            Text("iOS SwiftUI Version")
+        VStack(alignment: .center, spacing: 4) {
+            Text("SwiftUI Version")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
-                .foregroundStyle(.white)
-            Spacer()
+                .foregroundStyle(.red)
+//            Spacer()
             Text("Jonathan French 2025")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
-                .foregroundStyle(.white)
+                .foregroundStyle(.red)
             Spacer()
-            Text("Tap to Play")
+            Text("Music by Rasputin")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
                 .foregroundStyle(.white)
+            Spacer()
+
+            Text("Original game by")
+                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
+                .foregroundStyle(.blue)
+//            Spacer()
+            Text("Alexey Pajitnov 1984")
+                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
+                .foregroundStyle(.blue)
         }
     }
 }

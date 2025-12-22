@@ -16,11 +16,11 @@ struct SmoothCarousel: View {
         ZStack {
             pages[currentIndex]
                 .transition(.opacity)
-                .id(currentIndex)     // important so the transition works
+                .id(currentIndex)
         }
         .animation(.easeInOut(duration: 1.0), value: currentIndex)
         .onReceive(
-            Timer.publish(every: 2.5, on: .main, in: .common).autoconnect()
+            Timer.publish(every: 4.0, on: .main, in: .common).autoconnect()
         ) { _ in
             currentIndex = (currentIndex + 1) % pages.count
         }

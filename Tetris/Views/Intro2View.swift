@@ -19,7 +19,7 @@ struct Intro2View: View {
         VStack {
             Text("High Scores")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
-                .foregroundStyle(.white)
+                .foregroundStyle(.red)
             Spacer()
             VStack(alignment: .leading, spacing: 12) {
                 
@@ -49,7 +49,7 @@ struct Intro2View: View {
                     let score = topScores[index]
                     
                     HStack {
-                        Text("#\(index + 1)")
+                        Text("\(index + 1)")
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize))
                                 .foregroundStyle(.white)
                             .frame(width: 50, alignment: .leading)

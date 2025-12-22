@@ -11,27 +11,14 @@ import SwiftData
 @main
 struct TetrisApp: App {
     @StateObject private var manager = GameManager()
-//    var sharedModelContainer: ModelContainer = {
-//        let schema = Schema([
-//            GameScore.self,
-//        ])
-//        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-//
-//        do {
-//            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-//        } catch {
-//            fatalError("Could not create ModelContainer: \(error)")
-//        }
-//    }()
 
     var body: some Scene {
         WindowGroup {
             ContentView().environmentObject(manager)
         }
         .modelContainer(for: GameScore.self, onSetup: seedData)
-//        _ = seedData(container: sharedModelContainer)
     }
-    
+/// Initial seed of database to return some data for high scores.
     func seedData(_ result: Result<ModelContainer, Error>) {
         guard let container = try? result.get() else {
             print("Failed to set up model container")
@@ -39,7 +26,6 @@ struct TetrisApp: App {
         }
 
         let context = ModelContext(container)
-
         let count = (try? context.fetchCount(FetchDescriptor<GameScore>())) ?? 0
         guard count == 0 else { return }
 
@@ -53,8 +39,6 @@ struct TetrisApp: App {
             )
             context.insert(score)
         }
-
         try? context.save()
     }
-
 }

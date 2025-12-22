@@ -5,46 +5,48 @@
 //  Created by Jonathan French on 5.12.25.
 //
 
-
 import SwiftUI
 
 struct NextView: View {
     @EnvironmentObject var manager: GameManager
-    var shape:[[Color?]]
-    
+    @State private var displayedImage: ImageResource?
+    @State private var scale: CGFloat = 1.0
+    var next:ImageResource?
     var body: some View {
         VStack {
             Text("NEXT")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: 12))
                 .foregroundStyle(.white)
-            ZStack {
-                VStack(spacing: 0) {
-                    ForEach(0..<4) { row in
-                        HStack(spacing: 0) {
-                            ForEach(0..<4) { col in
-                                let col = shape[row][col]
-                                ZStack {
-                                    if let col {
-                                        Rectangle()
-                                            .fill(col)
-                                            .border(.black)
-                                            .frame(width: 20, height: 20)
-                                    } else {
-                                        Rectangle()
-                                            .fill(.clear)
-                                            .frame(width: 20, height: 20)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                }.border(.white)
+            if let displayedImage {
+                Image(displayedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .scaleEffect(scale)
             }
-        }.onTapGesture {
-            print("diving down")
+        }
+        .onAppear {
+            displayedImage = next
+        }
+        .onChange(of: next) { _, newValue in
+            Task {
+                await animateImageChange(to: newValue)
+            }
+        }
+        .onTapGesture {
             manager.currentTetrominio?.dropMove = true
         }
-        
+    }
+    
+    @MainActor
+    private func animateImageChange(to newImage: ImageResource?) async {
+        withAnimation(.easeIn(duration: 0.2)) {
+            scale = 0.0
+        }
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        displayedImage = newImage
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+            scale = 1.0
+        }
     }
 }

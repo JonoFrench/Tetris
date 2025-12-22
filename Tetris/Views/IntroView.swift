@@ -11,8 +11,9 @@ import Combine
 
 struct IntroView: View {
     static var starttextSize:CGFloat = 14
+    static var helptextSize:CGFloat = 9
     @EnvironmentObject var manager: GameManager
-    @State private var currentIndex = 0
+//    @State private var currentIndex = 0
     private let numberOfViews = 1
     private let pages:[AnyView] = [
         AnyView(Intro1View()),
@@ -27,15 +28,14 @@ struct IntroView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
-Spacer()
+                Spacer()
                 SmoothCarousel(pages: [
                     AnyView(Intro1View()),
                     AnyView(Intro2View()),
                     AnyView(Intro3View())
                 ])
-//                .frame(height: 280)
                 Spacer()
-
+                
             }.onTapGesture {
                 if manager.gameState == .intro {
                     manager.startGame()

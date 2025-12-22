@@ -9,33 +9,16 @@ import SwiftUI
 
 struct CountView: View {
     var counter:Int
-    var shape:[[Color?]]
-    
+    var img:ImageResource?
     var body: some View {
         VStack {
-            ZStack {
-                VStack(spacing: 0) {
-                    ForEach(0..<4) { row in
-                        HStack(spacing: 0) {
-                            ForEach(0..<4) { col in
-                                let col = shape[row][col]
-                                ZStack {
-                                    if let col {
-                                        Rectangle()
-                                            .fill(col)
-                                            .border(.black)
-                                            .frame(width: 16, height: 16)
-                                    } else {
-                                        Rectangle()
-                                            .fill(.clear)
-                                            .frame(width: 16, height: 16)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            if let img {
+                Image(img)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 64, height: 64)
             }
+
             Text("\(String(format: "%04d", counter))")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: 8))
                 .foregroundStyle(.white)
