@@ -32,7 +32,8 @@ class Tetromino: TetrominoProtocol {
     var speedCounter: Int = 0
     var stopmove = false
     var dropMove = false
-    
+    var deviceOffset = 8
+    var deviceAssetDimension = 2
     @Published
     var position = CGPoint()
     
@@ -58,7 +59,14 @@ class Tetromino: TetrominoProtocol {
         self.xPos = xPos
         self.yPos = yPos
         self.tetrominioArray = tetrominioArray
-        self.position = CGPoint(x: Double(xPos + 2) * manager.assetDimension + 8, y: Double(yPos-3) * manager.assetDimension)
+        if manager.deviceType == .iPad {
+            deviceAssetDimension = 5
+            deviceOffset = 24
+        } else {
+            deviceAssetDimension = 2
+            deviceOffset = 8
+        }
+        self.position = CGPoint(x: Double(xPos + deviceAssetDimension) * manager.assetDimension + Double(deviceOffset), y: Double(yPos-3) * manager.assetDimension)
         self.moveDistance = manager.assetDimension / currentSpeed
         self.kind = kind
     }

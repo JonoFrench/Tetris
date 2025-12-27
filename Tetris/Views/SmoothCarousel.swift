@@ -20,7 +20,7 @@ struct SmoothCarousel: View {
         }
         .animation(.easeInOut(duration: 1.0), value: currentIndex)
         .onReceive(
-            Timer.publish(every: 4.0, on: .main, in: .common).autoconnect()
+            Timer.publish(every: 5.0, on: .main, in: .common).autoconnect()
         ) { _ in
             currentIndex = (currentIndex + 1) % pages.count
         }

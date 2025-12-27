@@ -16,7 +16,7 @@ struct ContentView: View {
             Color(.black)
             VStack(spacing: 0) {
                 TopView()
-                    .frame(width: UIScreen.main.bounds.width,height: 60, alignment: .center)
+                    .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
                     .zIndex(0.1)
                     .background(.black)
                 if manager.gameState == .intro {
@@ -26,14 +26,14 @@ struct ContentView: View {
                 }
                 if manager.gameState != .intro {
                     ButtonView()
-                        .frame(width: UIScreen.main.bounds.width,height: 120, alignment: .center)
+                        .frame(width: UIScreen.main.bounds.width,height: manager.buttonHeight, alignment: .center)
                         .zIndex(0.1)
                         .background(.black)
                 } else {
                     ZStack {
                         Spacer()
                         Text("Tap to Play")
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize))
+                            .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
                             .foregroundStyle(.orange)
                             .frame(width: UIScreen.main.bounds.width,height: 120, alignment: .center)
                             .zIndex(0.1)

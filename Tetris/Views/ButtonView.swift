@@ -17,12 +17,12 @@ struct ButtonView: View {
                     
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.red)
-                        .frame(width: 100, height: 50)
+                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Image("LeftArrow")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 50)
+                                .frame(width: 50 * manager.deviceMulti)
                         })
                         .onTapGesture {
                             if manager.gameState == .playing {
@@ -32,12 +32,12 @@ struct ButtonView: View {
                         }
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.yellow)
-                        .frame(width: 100, height: 50)
+                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Image("RotateL")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 30)
+                                .frame(width: 30 * manager.deviceMulti)
                         })
                         .onTapGesture {
                             if manager.gameState == .playing {
@@ -56,12 +56,12 @@ struct ButtonView: View {
                     
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.red)
-                        .frame(width: 100, height: 50)
+                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Image("RightArrow")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 50)
+                                .frame(width: 50 * manager.deviceMulti)
                         })
                         .onTapGesture {
                             if manager.gameState == .playing {
@@ -71,12 +71,12 @@ struct ButtonView: View {
                         }
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.yellow)
-                        .frame(width: 100, height: 50)
+                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Image("RotateR")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 30)
+                                .frame(width: 30 * manager.deviceMulti)
                         })
                         .onTapGesture {
                             if manager.gameState == .playing {

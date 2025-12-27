@@ -12,18 +12,6 @@ public enum GameState {
     case intro,playing,highscore,paused,gameover
 }
 
-public enum JoyPad {
-    case left,right,up,down,stop
-}
-
-public enum BlockColours: String {
-    case redBlock,yellowBlock,blueBlock,greenBlock,purpleBlock,orangeBlock,blankBlock,cyanBlock
-    
-    var image: Image {
-            return Image(self.rawValue)
-        }
-}
-
 public enum GameConstants {
     
     public enum Game {
@@ -79,14 +67,10 @@ public enum GameConstants {
     }
     
     public enum Score {
-        public static let cherryPoints = 100
-        public static let allCherryPoints = 500
-        public static let monsterPoints = 500
-    }
-    
-    public enum Animation {
-        public static let appleAnimation = 0.2
-        public static let appleBreakAnimation = 0.1
+        public static let one = 40
+        public static let two = 100
+        public static let three = 300
+        public static let four = 1200
     }
     
     public enum Sound {

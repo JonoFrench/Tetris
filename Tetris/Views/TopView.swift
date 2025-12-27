@@ -14,11 +14,11 @@ struct TopView: View {
             VStack {
                 Color(.clear)
                 Text("Score:\(String(format: "%07d", manager.score))")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 14))
+                    .font(.custom("DonkeyKongClassicsNESExtended", size: 14 * manager.deviceMulti))
                     .foregroundStyle(.white)
                 Spacer()
                 Text("Level:\(String(format: "%03d", manager.level)) Lines:\(String(format: "%04d", manager.lines))")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 14))
+                    .font(.custom("DonkeyKongClassicsNESExtended", size: 14 * manager.deviceMulti))
                     .foregroundStyle(.white)
                 Spacer()
             }

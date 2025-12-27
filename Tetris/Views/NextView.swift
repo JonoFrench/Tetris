@@ -15,13 +15,13 @@ struct NextView: View {
     var body: some View {
         VStack {
             Text("NEXT")
-                .font(.custom("DonkeyKongClassicsNESExtended", size: 12))
+                .font(.custom("DonkeyKongClassicsNESExtended", size: 12 * manager.deviceMulti))
                 .foregroundStyle(.white)
             if let displayedImage {
                 Image(displayedImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 80, height: 80)
+                    .frame(width: 80 * manager.deviceMulti, height: 80 * manager.deviceMulti)
                     .scaleEffect(scale)
             }
         }

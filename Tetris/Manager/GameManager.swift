@@ -22,19 +22,19 @@ final class GameManager: ObservableObject {
     // MARK: - Published Properties
     @Published var gameState: GameState = .intro
     @Published var score = 0
-    @Published var lines = 0
+    @Published var lines: Int = 0 {
+        didSet {
+            handleLineChange(oldValue: oldValue, newValue: lines)
+        }
+    }
     @Published var level = 0
-    var topScore = 0
+    @Published var screenData:ColorArray = [[]]
+    @Published var clearingRows: Set<Int> = []
+    @Published var currentTetrominio: Tetromino?
     
     let soundFX:SoundFX = SoundFX()
-    @Published
-    var screenData:ColorArray = [[]]
-    @Published
-    var clearingRows: Set<Int> = []
-    
-    var blockImages:[Image] = []
     let screenDimensionX = 10
-    let screenDimensionY = 20.0
+    var screenDimensionY = 20.0
     let arrayDimentionY = 24 // bigger than visible to allow us to position blocks off screen
     let arrayDimentionX = 10
     var assetDimension = 0.0
@@ -42,11 +42,11 @@ final class GameManager: ObservableObject {
     var yPosOffset = 0.0
     var gameSize = CGSize()
     var screenSize = CGSize()
-    @Published
-    var currentTetrominio: Tetromino?
     var nextTetrominio: Tetromino?
     let gridColours:[Color] = [.red,.blue,.green,.yellow,.cyan,.purple,.orange,.white]
     var tetroCounters:[Int] = [0,0,0,0,0,0,0]
+    var topScore = 0
+    var startLevel = 10
     
     let oTetrominio:ColorArray = [[nil,nil,nil,nil],
                                   [nil,.red,.red,nil],
@@ -80,8 +80,29 @@ final class GameManager: ObservableObject {
     var tetroPick:[ColorArray] = []
     var tetroKind:[Kind] = []
     var deviceType:Device = .iPhone
+    var topHeight = 60.0
+    var buttonHeight = 120.0
+    var deviceMulti = 1.0
+    var statBox = 70.0
     
     init() {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            deviceType = .iPad
+            topHeight = 120.0
+            buttonHeight = 220.0
+            deviceMulti = 1.8
+            statBox = 100.0
+            screenDimensionY = 22.0
+            print("ipad")
+        } else {
+            deviceType = .iPhone
+            topHeight = 60.0
+            buttonHeight = 120.0
+            deviceMulti = 1.0
+            statBox = 70.0
+            screenDimensionY = 20.0
+            print("iphone")
+        }
         tetroPick = [oTetrominio,iTetrominio,sTetrominio,zTetrominio,lTetrominio,jTetrominio,tTetrominio]
         tetroKind = [Kind.O,Kind.I,Kind.S,Kind.Z,Kind.L,Kind.J,Kind.T]
         setupDisplayLink()
@@ -94,14 +115,11 @@ final class GameManager: ObservableObject {
     }
     
     func setInit() {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            deviceType = .iPad
-        } else {
-            deviceType = .iPhone
-        }
         assetDimension = gameSize.height / screenDimensionY
         assetDimensionStep = assetDimension / GameConstants.Speed.tileSteps
-        
+        level = startLevel
+        score = 0
+        lines = 0
     }
     
     func startGame() {
@@ -115,7 +133,6 @@ final class GameManager: ObservableObject {
     }
     
     @objc func nextTetromino(notification: Notification) {
-        //compactRows(in: &screenData)
         self.setTetronimo()
         clearFullRows()
     }
@@ -124,9 +141,63 @@ final class GameManager: ObservableObject {
         //        gameState = .gameover
     }
     
+    func scoreFor(lines: Int, level: Int) -> Int {
+        let base: Int
+        switch lines {
+        case 1: base = GameConstants.Score.one
+        case 2: base = GameConstants.Score.two
+        case 3: base = GameConstants.Score.three
+        case 4: base = GameConstants.Score.four
+        default: base = 0
+        }
+        return base * (level + 1)
+    }
+    
+    func currentLevel(startLevel: Int, totalLines: Int) -> Int {
+        if startLevel < 10 {
+            return startLevel + (totalLines / 10)
+        } else {
+            let firstThreshold = startLevel * 10 - 50
+            if totalLines < firstThreshold {
+                return startLevel
+            } else {
+                return startLevel + ((totalLines - firstThreshold) / 10) + 1
+            }
+        }
+    }
+    
+    private func handleLineChange(oldValue: Int, newValue: Int) {
+        if newValue == 0 { /// if reset score etc for new game
+            self.score = 0
+            self.level = startLevel
+            return
+        }
+
+        let linesJustCleared = newValue - oldValue
+        guard linesJustCleared > 0 else { return }
+        
+        // 1️⃣ Update score
+        self.score += scoreFor(lines: linesJustCleared, level: level)
+        
+        // 2️⃣ Update level
+        self.level = currentLevel(
+            startLevel: startLevel,
+            totalLines: newValue
+        )
+        
+        // 3️⃣ (Optional) Update speed
+        updateDropSpeed(for: self.level)
+    }
+    
+    func updateDropSpeed(for: Int) {
+        if let currentTetrominio {
+            currentTetrominio.currentSpeed = Double(20 - level)
+            currentTetrominio.moveDistance = assetDimension / currentTetrominio.currentSpeed
+        }
+    }
+    
     /// Main loop of game. Tied to screen refresh.
     @objc func refreshModel() {
-        
         if gameState == .playing {
             if let currentTetrominio {
                 currentTetrominio.move()
@@ -135,12 +206,18 @@ final class GameManager: ObservableObject {
     }
     
     func setTetronimo() {
-        let n = Int.random(in: 0...6)
-        //            n = 1
-        let posX = Int.random(in: 0...6)
+        guard gameState == .playing else { return }
         self.currentTetrominio = nextTetrominio
-        nextTetrominio = Tetromino(xPos: posX, yPos: 0, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
         tetroCounters[currentTetrominio!.kind.rawValue] += 1
+        nextTetrominio = getTetronimo()
+    }
+    
+    func getTetronimo() -> Tetromino {
+        let n = Int.random(in: 0...6)
+        let xs = [7,7,7,7,7,7,7]
+        let posX = Int.random(in: 0...xs[n])
+        print("getTetronimo \(tetroKind[n]) at \(posX)")
+        return Tetromino(xPos: posX, yPos: 0, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
     }
     
     func setScreenData() {
@@ -150,10 +227,8 @@ final class GameManager: ObservableObject {
             count: arrayDimentionY
         )
         tetroCounters = [0,0,0,0,0,0,0]
-        let n = Int.random(in: 0...6)
-        //            n = 1
-        let posX = Int.random(in: 0...6)
-        nextTetrominio = Tetromino(xPos: posX, yPos: 0, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
+        nextTetrominio = getTetronimo()
+        
         //        screenData[23][0] = .red
         //        screenData[23][1] = .red
         //        screenData[23][2] = .red
@@ -317,7 +392,7 @@ final class GameManager: ObservableObject {
         grid = Array(repeating: emptyRow, count: removedCount) + nonFullRows
     }
     
-     private func clearFullRows() {
+    private func clearFullRows() {
         let rowsToClear = detectFullRows(in: self.screenData)
         withAnimation {
             clearingRows = Set(rowsToClear)
@@ -391,7 +466,4 @@ extension GameManager {
         NotificationCenter.default.addObserver(self, selector: #selector(self.gameOver(notification:)), name: .notificationGameOver, object: nil)
         
     }
-    
-    
-    
 }
