@@ -14,6 +14,7 @@ struct ContentView: View {
     var body: some View {
         ZStack(alignment: .top) {
             Color(.black)
+                .statusBar(hidden: true)
             VStack(spacing: 0) {
                 TopView()
                     .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
@@ -30,6 +31,10 @@ struct ContentView: View {
                         .zIndex(0.1)
                         .background(.black)
                 } else {
+//                    ZStack {
+//                        Spacer()
+//                        PlayButton()
+//                    }
                     ZStack {
                         Spacer()
                         Text("Tap to Play")
@@ -43,6 +48,8 @@ struct ContentView: View {
                                     manager.startGame()
                                 }
                             }
+//                        PlayButton()
+//                        Spacer()
                     }
                 }
             }

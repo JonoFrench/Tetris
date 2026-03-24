@@ -27,6 +27,7 @@ private enum SoundType {
 private enum SoundAsset {
     static let background = "rasputin"
     static let rowclear = "whoosh"
+    static let gameover = "tetroidgameover"
 }
 
 final class SoundFX {
@@ -52,7 +53,8 @@ final class SoundFX {
     private func loadSoundAssets() {
         // Load effects
         loadSound(SoundAsset.rowclear, type: .effect)
-        
+        loadSound(SoundAsset.gameover, type: .effect)
+
         // Load background music
         loadSound(SoundAsset.background, type: .background)
     }
@@ -89,9 +91,11 @@ final class SoundFX {
     
     // MARK: - Public Interface
     func clearRowSound() { playOnNewThread(SoundAsset.rowclear) }
+    func gameOverSound() { playOnNewThread(SoundAsset.gameover) }
     // MARK: - Background Music
     func backgroundSound() { playOnNewThread(SoundAsset.background, loops: -1) }
-    
+    func stopBackgroundSound() { stop(SoundAsset.background) }
+
 
     
 }

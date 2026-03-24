@@ -24,7 +24,7 @@ struct IntroView: View {
         GeometryReader { proxy in
             VStack(alignment: .center) {
                 Spacer()
-                Image("Logo2")
+                Image("LogoTetroids")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)

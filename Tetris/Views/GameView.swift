@@ -24,7 +24,12 @@ struct GameView: View {
                                 .onTapGesture {
                                     manager.gameState = .intro
                                 }
+                        }  else if manager.gameState == .highscore {
+                            NewHighScoreView()
+                                .background(.clear)
+                                .zIndex(1.0)
                         }
+
                     }.onTapGesture {
                         if manager.gameState == .playing {
                             manager.gameState = .paused

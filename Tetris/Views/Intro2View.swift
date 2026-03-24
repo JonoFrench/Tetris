@@ -25,9 +25,9 @@ struct Intro2View: View {
                 
                 // HEADER
                 HStack {
-                    Text("Rank").frame(width: 50 * manager.deviceMulti, alignment: .leading)                .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                    Text(" ").frame(width: 40 * manager.deviceMulti, alignment: .leading)                .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                         .foregroundStyle(.white)
-                    Text("Name").frame(width: 100 * manager.deviceMulti, alignment: .leading)
+                    Text("Name").frame(width: 50 * manager.deviceMulti, alignment: .leading)
                         .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                    Text("Rows").frame(width: 60 * manager.deviceMulti, alignment: .trailing)
@@ -52,12 +52,12 @@ struct Intro2View: View {
                         Text("\(index + 1)")
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
-                            .frame(width: 50 * manager.deviceMulti, alignment: .leading)
+                            .frame(width: 40 * manager.deviceMulti, alignment: .leading)
                         
                         Text(score.name)
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
-                            .frame(width: 100 * manager.deviceMulti, alignment: .leading)
+                            .frame(width: 50 * manager.deviceMulti, alignment: .leading)
                         
                         Text("\(score.rows)")
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))

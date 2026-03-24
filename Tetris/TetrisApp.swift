@@ -28,14 +28,18 @@ struct TetrisApp: App {
         let context = ModelContext(container)
         let count = (try? context.fetchCount(FetchDescriptor<GameScore>())) ?? 0
         guard count == 0 else { return }
-
-        for i in 1...10 {
+//        try? context.delete(model: GameScore.self, where: #Predicate { _ in true })
+//        try? context.save()
+        for _ in 1...10 {
             let score = GameScore(
                 timestamp: .now,
-                rows: Int.random(in: 1...20),
-                score: Int.random(in: 500...3000),
-                level: Int.random(in: 1...10),
-                name: "JPF \(i)"
+//                rows: Int.random(in: 1...20),
+//                score: Int.random(in: 500...3000),
+//                level: Int.random(in: 1...10),
+                rows: 0,
+                score: 0,
+                level: 0,
+                name: "JPF"
             )
             context.insert(score)
         }

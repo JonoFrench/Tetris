@@ -18,7 +18,7 @@ typealias ColorArray = [[Color?]]
 
 @MainActor
 final class GameManager: ObservableObject {
-    @Environment(\.modelContext) private var context
+    @Environment(\.modelContext) var context
     // MARK: - Published Properties
     @Published var gameState: GameState = .intro
     @Published var score = 0
@@ -84,6 +84,16 @@ final class GameManager: ObservableObject {
     var buttonHeight = 120.0
     var deviceMulti = 1.0
     var statBox = 70.0
+    ///New High Score Handling
+    @Published
+    var letterIndex = 0
+    @Published
+    var letterArray:[Character] = ["A","A","A"]
+    @Published
+    var selectedLetter = 0
+    var highScoreLetters:[Character] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+//    var hiScores:[HighScores] = []
+
     
     init() {
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -120,6 +130,7 @@ final class GameManager: ObservableObject {
         level = startLevel
         score = 0
         lines = 0
+        updateDropSpeed(for: level)
     }
     
     func startGame() {
@@ -287,14 +298,31 @@ final class GameManager: ObservableObject {
         
     }
     
+    func gameOver() {
+        soundFX.stopBackgroundSound()
+        soundFX.gameOverSound()
+        if isTop10(score: score, context: context) {
+            letterIndex = 0
+            selectedLetter = 0
+            letterArray = ["A","A","A"]
+            gameState = .highscore
+
+        } else {
+            level = 1
+            gameState = .gameover
+        }
+
+    }
+    
     /// Places a block into a larger 2D array at (x, y),
     /// skipping out-of-bounds writes and skipping nils in the block.
     func placeTetromino(large: inout ColorArray,block: ColorArray,atX x: Int,y: Int) {
         print("placeTetromino at x\(x) y \(y)")
         ///If we are placing tetromino at pos less than 4 then thats offscreen, so game over.
         if y < 4  {
-            gameState = .gameover
+            gameOver()
             print("placeTetromino game over")
+            return
         }
         
         for row in 0..<block.count {
@@ -450,6 +478,28 @@ final class GameManager: ObservableObject {
             print("Fetch failed: \(error)")
             return []
         }
+    }
+    
+    func isTop10(score newScore: Int, context: ModelContext) -> Bool {
+        var descriptor = FetchDescriptor<GameScore>(
+            sortBy: [SortDescriptor(\.score, order: .reverse)]
+        )
+        
+        descriptor.fetchLimit = 10
+        
+        let topScores = try? context.fetch(descriptor)
+        
+        // If fewer than 10 scores exist, it's automatically top 10
+        guard topScores!.count == 10 else {
+            return true
+        }
+        
+        // Compare with the lowest score in the current top 10
+        if let lowestTopScore = topScores?.last?.score {
+            return newScore > lowestTopScore
+        }
+        
+        return true
     }
 }
 

@@ -77,19 +77,20 @@ class Tetromino: TetrominoProtocol {
         }
         if dropMove {
             let dropDiff = Int(currentSpeed) - self.speedCounter
-            dropMove = false
-            self.position.y += Double(dropDiff) * moveDistance
+            self.dropMove = false
+            self.position.y += Double(dropDiff) * self.moveDistance
             self.speedCounter = 0
-            moveDistance = manager.assetDimension
-            currentSpeed = 1
-            yPos += 1
+            self.moveDistance = manager.assetDimension
+            self.currentSpeed = 1
+            //manager.updateDropSpeed(for: manager.level)
+            self.yPos += 1
         } else {
             self.speedCounter += 1
             self.position.y += moveDistance
             if self.speedCounter == Int(currentSpeed) {
                 self.speedCounter = 0
                 if !checkBoard() {
-                    print("!checkBoard() stopTetromino")
+                    print("!checkBoard() stopTetromino \(currentSpeed)")
                     stopTetromino()
                 } else {
                     yPos += 1
