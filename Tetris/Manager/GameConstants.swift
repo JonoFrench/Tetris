@@ -9,7 +9,7 @@ import CoreGraphics
 import SwiftUI
 
 public enum GameState {
-    case intro,playing,highscore,paused,gameover
+    case intro,playing,highscore,paused,gameover,gameending
 }
 
 public enum GameConstants {

@@ -13,6 +13,12 @@ struct GameView: View {
         ZStack(alignment: .center) {
             HStack(alignment: .center) {
                 ScreenView()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.white, lineWidth: 1)
+                            .background(Color.clear)
+                            .allowsHitTesting(false)
+                    )
                     .onTapGesture {
                         if manager.gameState == .playing {
                             manager.gameState = .paused

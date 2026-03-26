@@ -225,19 +225,22 @@ final class GameManager: ObservableObject {
     
     func getTetronimo() -> Tetromino {
         let n = Int.random(in: 0...6)
-//        let xs = [7,7,7,7,7,7,7]
         let xs = [6,6,6,6,6,6,6]
         let posX = Int.random(in: 0...xs[n])
         print("getTetronimo \(tetroKind[n]) at \(posX)")
         return Tetromino(xPos: posX, yPos: 0, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
     }
     
-    func setScreenData() {
+    func clearScreen() {
         screenData.removeAll()
         screenData = Array(
             repeating: Array(repeating: nil, count: arrayDimentionX),
             count: arrayDimentionY
         )
+    }
+    
+    func setScreenData() {
+        clearScreen()
         tetroCounters = [0,0,0,0,0,0,0]
         nextTetrominio = getTetronimo()
         
@@ -302,19 +305,21 @@ final class GameManager: ObservableObject {
     func gameOver() {
         soundFX.stopBackgroundSound()
         soundFX.gameOverSound()
-//        gameState = .gameover
-
-        if isTop10(score: score, context: context!) {
-            letterIndex = 0
-            selectedLetter = 0
-            letterArray = ["A","A","A"]
-            gameState = .highscore
-
-        } else {
-//            level = 1
-            gameState = .gameover
+        gameState = .gameending
+        
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.0))
+            clearScreen()
+            if isTop10(score: score, context: context!) {
+                letterIndex = 0
+                selectedLetter = 0
+                letterArray = ["A","A","A"]
+                gameState = .highscore
+                
+            } else {
+                gameState = .gameover
+            }
         }
-
     }
     
     /// Places a block into a larger 2D array at (x, y),

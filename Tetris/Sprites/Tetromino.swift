@@ -19,8 +19,19 @@ enum Kind: Int { case I = 0, O = 1, J = 2, L = 3, S = 4, T = 5, Z = 6 }
 enum RotationDirection { case cw, ccw }
 
 class Tetromino: TetrominoProtocol {
-    
-    var xPos:Int = 0
+    private var _xPos: Int = 0
+    var xPos: Int {
+        get { _xPos }
+        set {
+            print("xPos changing from \(_xPos) to \(newValue)")
+            _xPos = newValue
+            if _xPos == -3 {
+                print("xPos is -3")
+
+            }
+        }
+    }
+    //var xPos:Int = 0
     var yPos:Int = 0
     var kind: Kind
     var rotation: Int = 0
@@ -55,8 +66,8 @@ class Tetromino: TetrominoProtocol {
     let O_KICKS = [(0,0)]
     
     init(xPos: Int, yPos: Int, manager:GameManager,tetrominioArray:ColorArray,kind:Kind) {
+        self._xPos = xPos
         self.manager = manager
-        self.xPos = xPos
         self.yPos = yPos
         self.tetrominioArray = tetrominioArray
         if manager.deviceType == .iPad {
@@ -70,6 +81,7 @@ class Tetromino: TetrominoProtocol {
         self.position = CGPoint(x: Double(xPos + deviceAssetDimension) * manager.assetDimension + Double(deviceOffset), y: Double(yPos-3) * manager.assetDimension)
         self.moveDistance = manager.assetDimension / currentSpeed
         self.kind = kind
+        self.xPos = xPos
     }
     
     func move() {
@@ -83,15 +95,14 @@ class Tetromino: TetrominoProtocol {
             self.speedCounter = 0
             self.moveDistance = manager.assetDimension
             self.currentSpeed = 1
-            //manager.updateDropSpeed(for: manager.level)
             self.yPos += 1
         } else {
             self.speedCounter += 1
-            self.position.y += moveDistance
+           self.position.y += moveDistance
             if self.speedCounter == Int(currentSpeed) {
                 self.speedCounter = 0
                 if !checkBoard() {
-                    print("!checkBoard() stopTetromino \(currentSpeed)")
+                    print("!checkBoard() stopTetromino X\(xPos) Y \(yPos)")
                     stopTetromino()
                 } else {
                     yPos += 1
@@ -139,7 +150,8 @@ class Tetromino: TetrominoProtocol {
     }
         
     func rotateTetromino(tet: inout Tetromino,grid: ColorArray,direction: RotationDirection) {
-        // 1. Compute new rotation value
+        print("rotate \(direction)")
+       // 1. Compute new rotation value
         let oldRot = tet.rotation
         let newRot = direction == .cw ? (oldRot + 1) % 4 : (oldRot + 3) % 4
         
@@ -149,8 +161,6 @@ class Tetromino: TetrominoProtocol {
         : rotateCCW(tet.tetrominioArray)
         
         // 3. Choose kick table
-        //        let kickTable: [Int:(dx: Int, dy: Int)]
-        
         let kicks: [(dx: Int, dy: Int)]
         switch tet.kind {
         case .O:
@@ -163,29 +173,25 @@ class Tetromino: TetrominoProtocol {
         }
         
         // 4. Try each kick
+        
         for (dx, dy) in kicks {
-            let testTet = tet
-            testTet.xPos += dx
-            testTet.yPos += dy
-            //            testTet.xBoard += dx
-            //            testTet.yBoard += dy
-            
-            if !isCollision(grid: grid, tet: testTet, shape: newShape) {
-                // Successful rotation
-                tet.xPos = testTet.xPos
-                tet.yPos = testTet.yPos
-                //                tet.xBoard = testTet.xBoard
-                //                tet.yBoard = testTet.yBoard
-                
+            let testX = tet.xPos + dx
+            let testY = tet.yPos + dy
+
+            if !isCollisionAt(grid: grid, x: testX, y: testY, shape: newShape) {
+                tet.position.x += CGFloat(dx) * manager.assetDimension
+                tet.xPos = testX
+                tet.yPos = testY
                 tet.tetrominioArray = newShape
                 tet.rotation = newRot
                 return
             }
         }
-        
         // 5. All kicks failed -> rotation is blocked
+        print("rotate failed")
     }
     func rotateCW(_ m: ColorArray) -> ColorArray {
+        print("rotate rotateCW")
         var out = Array(repeating: Array(repeating: Color?.none, count: 4), count: 4)
         for y in 0..<4 {
             for x in 0..<4 {
@@ -196,6 +202,7 @@ class Tetromino: TetrominoProtocol {
     }
     
     func rotateCCW(_ m: ColorArray) -> ColorArray {
+        print("rotate rotateCCW")
         var out = Array(repeating: Array(repeating: Color?.none, count: 4), count: 4)
         for y in 0..<4 {
             for x in 0..<4 {
@@ -205,25 +212,18 @@ class Tetromino: TetrominoProtocol {
         return out
     }
     
-    func isCollision(grid: ColorArray, tet: Tetromino, shape: ColorArray) -> Bool {
-        for y in 0..<4 {
-            for x in 0..<4 {
-                guard let color = shape[y][x] else { continue }
+    func isCollisionAt(grid: ColorArray, x: Int, y: Int, shape: ColorArray) -> Bool {
+        for sy in 0..<4 {
+            for sx in 0..<4 {
+                guard shape[sy][sx] != nil else { continue }
                 
-                let gx = self.xPos + x
-                let gy = self.yPos + y
-                print("isCollision xpos \(xPos) gx \(gx) x \(x)")
+                let gx = x + sx
+                let gy = y + sy
                 
-                // Outside grid
-                if gy < 0 || gy > grid.count { return true }
-                if gx < 0 || gx > grid[0].count {
-                    print("outside grid left ")
-                    return true }
+                if gy < 0 || gy >= grid.count { return true }
+                if gx < 0 || gx >= grid[0].count { return true }
                 
-                // Collides with existing block
-                if gx < grid[0].count {
-                    if grid[gy][gx] != nil { return true }
-                }
+                if grid[gy][gx] != nil { return true }
             }
         }
         return false

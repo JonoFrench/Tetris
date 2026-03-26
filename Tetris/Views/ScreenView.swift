@@ -28,8 +28,8 @@ struct ScreenView: View {
                                             .scaleEffect(manager.clearingRows.contains(y+4) ? 0.01 : 1) // shrink
                                             .animation(.easeOut(duration: 0.5), value: manager.clearingRows)
                                                                 
-                                            .scaleEffect(manager.gameState == .gameover ? 0 : 1) // shrink
-                                            .animation(.easeOut(duration: 1), value: manager.gameState == .gameover)
+                                            .scaleEffect(manager.gameState == .gameending ? 0 : 1)
+                                            .animation(.easeOut(duration: 1), value: manager.gameState == .gameending)
                                     } else {
                                         Rectangle().fill(.clear)
                                     }
