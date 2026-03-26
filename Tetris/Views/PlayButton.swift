@@ -11,17 +11,20 @@ import SwiftUI
 struct PlayButton: View {
     @EnvironmentObject var manager: GameManager
     @State private var isPressed = false
-    
+    var btnTxt:String
+    var action: () -> Void
     var body: some View {
-        Button(action: {
-            print("Play tapped")
-            if manager.gameState == .intro {
-                manager.startGame()
-            }
-            
+        Button(action:
+                {
+            print(btnTxt)
+            action()
+//            if manager.gameState == .intro {
+//                manager.startGame()
+//            }
         }) {
-            Text("TAP TO PLAY")
-                .font(.system(size: 28, weight: .heavy, design: .rounded))
+            Text(btnTxt)
+                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
+                //.font(.system(size: 28, weight: .heavy, design: .rounded))
                 .foregroundColor(.white)
                 .padding(.vertical, 18)
                 .padding(.horizontal, 40)

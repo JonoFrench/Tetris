@@ -8,23 +8,24 @@
 import SwiftUI
 
 struct GameOverView: View {
+    @EnvironmentObject var manager: GameManager
     var body: some View {
         ZStack {
             Color.black.opacity(0.6)
             VStack(alignment: .center) {
                 Spacer()
                 Text("Game Over")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18))
-                    .foregroundStyle(.white)
+                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18 * manager.deviceMulti))
+                    .foregroundStyle(.red)
                 Spacer()
                 Text("Tap to")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18))
+                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18 * manager.deviceMulti ))
                     .foregroundStyle(.white)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Text("Continue")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18))
+                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18 * manager.deviceMulti))
                     .foregroundStyle(.white)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)

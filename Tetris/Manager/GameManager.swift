@@ -18,7 +18,7 @@ typealias ColorArray = [[Color?]]
 
 @MainActor
 final class GameManager: ObservableObject {
-    @Environment(\.modelContext) var context
+//    @Environment(\.modelContext) var context
     // MARK: - Published Properties
     @Published var gameState: GameState = .intro
     @Published var score = 0
@@ -46,7 +46,7 @@ final class GameManager: ObservableObject {
     let gridColours:[Color] = [.red,.blue,.green,.yellow,.cyan,.purple,.orange,.white]
     var tetroCounters:[Int] = [0,0,0,0,0,0,0]
     var topScore = 0
-    var startLevel = 10
+    var startLevel = 1 //10
     
     let oTetrominio:ColorArray = [[nil,nil,nil,nil],
                                   [nil,.red,.red,nil],
@@ -93,7 +93,7 @@ final class GameManager: ObservableObject {
     var selectedLetter = 0
     var highScoreLetters:[Character] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 //    var hiScores:[HighScores] = []
-
+    var context: ModelContext?
     
     init() {
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -225,7 +225,8 @@ final class GameManager: ObservableObject {
     
     func getTetronimo() -> Tetromino {
         let n = Int.random(in: 0...6)
-        let xs = [7,7,7,7,7,7,7]
+//        let xs = [7,7,7,7,7,7,7]
+        let xs = [6,6,6,6,6,6,6]
         let posX = Int.random(in: 0...xs[n])
         print("getTetronimo \(tetroKind[n]) at \(posX)")
         return Tetromino(xPos: posX, yPos: 0, manager: self, tetrominioArray: tetroPick[n], kind: tetroKind[n])
@@ -301,14 +302,16 @@ final class GameManager: ObservableObject {
     func gameOver() {
         soundFX.stopBackgroundSound()
         soundFX.gameOverSound()
-        if isTop10(score: score, context: context) {
+//        gameState = .gameover
+
+        if isTop10(score: score, context: context!) {
             letterIndex = 0
             selectedLetter = 0
             letterArray = ["A","A","A"]
             gameState = .highscore
 
         } else {
-            level = 1
+//            level = 1
             gameState = .gameover
         }
 
@@ -457,10 +460,10 @@ final class GameManager: ObservableObject {
         gameScore.level = level
         gameScore.name = name
         
-        context.insert(gameScore)
+        context!.insert(gameScore)
         
         do {
-            try context.save()
+            try context!.save()
         } catch {
             print("Failed to save: \(error)")
         }
@@ -479,7 +482,10 @@ final class GameManager: ObservableObject {
             return []
         }
     }
-    
+
+    func isTop10(score newScore: Int) -> Bool {
+        return true
+    }
     func isTop10(score newScore: Int, context: ModelContext) -> Bool {
         var descriptor = FetchDescriptor<GameScore>(
             sortBy: [SortDescriptor(\.score, order: .reverse)]

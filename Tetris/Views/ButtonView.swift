@@ -18,6 +18,7 @@ struct ButtonView: View {
                 VStack {
                     
                     RoundedRectangle(cornerRadius: 25)
+                        .stroke(.white, lineWidth: 2)
                         .fill(.red)
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
@@ -37,6 +38,7 @@ struct ButtonView: View {
                     
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.yellow)
+                        .stroke(.white, lineWidth: 2)
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Image("RotateL")
@@ -55,6 +57,7 @@ struct ButtonView: View {
                 if manager.gameState == .highscore {
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.red)
+                        .stroke(.white, lineWidth: 2)
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Text("NEXT")
@@ -75,6 +78,7 @@ struct ButtonView: View {
                     
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.red)
+                        .stroke(.white, lineWidth: 2)
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Image("RightArrow")
@@ -92,7 +96,9 @@ struct ButtonView: View {
                         }
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.yellow)
+                        .stroke(.white, lineWidth: 2)
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
+                        
                         .overlay(content: {
                             Image("RotateR")
                                 .resizable()
@@ -108,7 +114,7 @@ struct ButtonView: View {
                 }
                 Spacer()
             }
-        }.background(.black)
+        }.background(.clear)
     }
     
     func nextLetter() {

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct Intro2View: View {
-    static var hstextSize:CGFloat = 8
+    static var hstextSize:CGFloat = 10
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
     @State private var topScores: [GameScore] = []
@@ -27,13 +27,13 @@ struct Intro2View: View {
                 HStack {
                     Text(" ").frame(width: 40 * manager.deviceMulti, alignment: .leading)                .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                         .foregroundStyle(.white)
-                    Text("Name").frame(width: 50 * manager.deviceMulti, alignment: .leading)
+                    Text("Name").frame(width: 60 * manager.deviceMulti, alignment: .leading)
                         .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                    Text("Rows").frame(width: 60 * manager.deviceMulti, alignment: .trailing)
                         .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
-                    Text("Level").frame(width: 60 * manager.deviceMulti, alignment: .trailing)
+                    Text("Level").frame(width: 70 * manager.deviceMulti, alignment: .trailing)
                         .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                     Text("Score").frame(maxWidth: .infinity, alignment: .trailing)
@@ -57,7 +57,7 @@ struct Intro2View: View {
                         Text(score.name)
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
-                            .frame(width: 50 * manager.deviceMulti, alignment: .leading)
+                            .frame(width: 60 * manager.deviceMulti, alignment: .leading)
                         
                         Text("\(score.rows)")
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
@@ -67,7 +67,7 @@ struct Intro2View: View {
                         Text("\(score.level)")
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
-                            .frame(width: 60 * manager.deviceMulti, alignment: .trailing)
+                            .frame(width: 70 * manager.deviceMulti, alignment: .trailing)
                         
                         Text("\(score.score)")
                             .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))

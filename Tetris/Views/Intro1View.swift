@@ -15,7 +15,7 @@ struct Intro1View: View {
 //                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
 //                .foregroundStyle(.red)
 //            Spacer()
-            Text("(c) Jonathan French")
+            Text("Jonathan French")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
                 .foregroundStyle(.red)
             Text("2026")
@@ -23,6 +23,15 @@ struct Intro1View: View {
                 .foregroundStyle(.red)
 
             Spacer()
+            Text("NICE OF YOU TO")
+                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
+                .foregroundStyle(.yellow)
+            Text("DROP IN")
+                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
+                .foregroundStyle(.yellow)
+
+            Spacer()
+
             Text("Music by Rasputin")
                 .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
                 .foregroundStyle(.white)

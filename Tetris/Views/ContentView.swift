@@ -10,49 +10,66 @@ import SwiftData
 
 struct ContentView: View {
     @EnvironmentObject var manager: GameManager
-    
+    @Environment(\.modelContext) private var context
+    func startGame() {
+        if manager.gameState == .intro {
+            manager.startGame()
+        }
+    }
     var body: some View {
         ZStack(alignment: .top) {
-            Color(.black)
+//            Color(.black).ignoresSafeArea()
+            LinearGradient(
+                colors: [Color.black,Color.purple.opacity(0.8)],
+                startPoint: .top,
+                endPoint: .bottom
+            ).ignoresSafeArea()
+
                 .statusBar(hidden: true)
             VStack(spacing: 0) {
+                Spacer()
                 TopView()
                     .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
                     .zIndex(0.1)
-                    .background(.black)
+                    .background(manager.gameState == .intro ? .clear : .black)
                 if manager.gameState == .intro {
-                    IntroView().background(.black)
+                    IntroView().background(.clear)
                 } else {
                     GameView()
+//                        .background(.blue)
+                        .overlay() {
+                            //background(.blue)
+                            if manager.gameState == .paused {
+                                OverlayView()
+                            } else if manager.gameState == .gameover {
+                                GameOverView()
+                                    .onTapGesture {
+                                        manager.gameState = .intro
+                                    }
+                            }  else if manager.gameState == .highscore {
+                                NewHighScoreView()
+                                    .background(.clear)
+                                    .zIndex(1.0)
+                            }
+                        }
                 }
                 if manager.gameState != .intro {
                     ButtonView()
                         .frame(width: UIScreen.main.bounds.width,height: manager.buttonHeight, alignment: .center)
                         .zIndex(0.1)
-                        .background(.black)
+                        .background(.clear)
                 } else {
-//                    ZStack {
-//                        Spacer()
-//                        PlayButton()
-//                    }
-                    ZStack {
-                        Spacer()
-                        Text("Tap to Play")
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
-                            .foregroundStyle(.orange)
-                            .frame(width: UIScreen.main.bounds.width,height: 120, alignment: .center)
-                            .zIndex(0.1)
-                            .background(.black)
-                            .onTapGesture {
-                                if manager.gameState == .intro {
-                                    manager.startGame()
-                                }
-                            }
-//                        PlayButton()
-//                        Spacer()
+                    Spacer()
+                    PlayButton(btnTxt: "TAP TO PLAY") {
+                        if manager.gameState == .intro {
+                            manager.startGame()
+                        }
                     }
+                    Spacer()
                 }
             }
+        }.onAppear{
+            manager.context = context
         }
     }
 }

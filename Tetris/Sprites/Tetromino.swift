@@ -60,11 +60,12 @@ class Tetromino: TetrominoProtocol {
         self.yPos = yPos
         self.tetrominioArray = tetrominioArray
         if manager.deviceType == .iPad {
-            deviceAssetDimension = 5
+            deviceAssetDimension = 6
             deviceOffset = 24
         } else {
             deviceAssetDimension = 2
-            deviceOffset = 8
+            //8
+            deviceOffset = Int(10 + manager.assetDimension)
         }
         self.position = CGPoint(x: Double(xPos + deviceAssetDimension) * manager.assetDimension + Double(deviceOffset), y: Double(yPos-3) * manager.assetDimension)
         self.moveDistance = manager.assetDimension / currentSpeed

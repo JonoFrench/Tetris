@@ -24,10 +24,12 @@ struct ScreenView: View {
                                         Rectangle()
                                             .fill(c)
                                             .border(.black)
-                                            .opacity(manager.clearingRows.contains(y) ? 0 : 1)      // fade out
-                                            .scaleEffect(manager.clearingRows.contains(y) ? 0.01 : 1) // shrink
-                                            .animation(.easeOut(duration: 0.15), value: manager.clearingRows)
-                                        
+                                            .opacity(manager.clearingRows.contains(y+4) ? 0 : 1)      // fade out
+                                            .scaleEffect(manager.clearingRows.contains(y+4) ? 0.01 : 1) // shrink
+                                            .animation(.easeOut(duration: 0.5), value: manager.clearingRows)
+                                                                
+                                            .scaleEffect(manager.gameState == .gameover ? 0 : 1) // shrink
+                                            .animation(.easeOut(duration: 1), value: manager.gameState == .gameover)
                                     } else {
                                         Rectangle().fill(.clear)
                                     }
@@ -36,22 +38,25 @@ struct ScreenView: View {
                         }
                     }.background(.black)
                 }.anchorPreference(key: BoundsKey.self, value: .bounds) { $0 }
-            }//.zIndex(1.0)
-            .backgroundPreferenceValue(BoundsKey.self) { anchor in
-                GeometryReader { proxy in
-                    if let anchor {
-                        let frame = proxy[anchor]
-                        Color.clear.onAppear {
-                            manager.yPosOffset = (manager.gameSize.width - frame.width) / 2
-                            print("tetris ZStack frame size: \(frame) offset: \(manager.yPosOffset)")
-                        }
+            }.backgroundPreferenceValue(BoundsKey.self) { anchor in
+            GeometryReader { proxy in
+                if let anchor {
+                    let frame = proxy[anchor]
+                    Color.clear.onAppear {
+                        manager.yPosOffset = (manager.gameSize.width - frame.width) / 2
+                        print("tetris ZStack frame size: \(frame) offset: \(manager.yPosOffset)")
                     }
                 }
-            }.border(.white, width: 1.0).zIndex(0.2)
-            //.sideBorder(color: .white, width: 1, sides: .left, .right, .top)
+            }
+            }
+//            .overlay {
+//                background(.blue)
+//            }
+            //.border(.white, width: 1.0)
+//            .sideBorder(color: .yellow, width: 1, sides: .left, .right, .top, .bottom).zIndex(0.3)
 //            ZStack(alignment: .center) {
 //                if let currentTetrominio = manager.currentTetrominio {
-//                    TetrominoView(manager: _manager, tetromino: currentTetrominio).zIndex(0.3)
+//                    TetrominoView(manager: _manager, tetromino: currentTetrominio)
 //                }
 //            }.zIndex(0.4)
         }
