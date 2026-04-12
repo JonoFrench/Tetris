@@ -20,7 +20,7 @@ struct CountView: View {
                     .frame(width: 50 * manager.deviceMulti, height: 50 * manager.deviceMulti)
             }
             Text("\(String(format: "%03d", counter))")
-                .font(.custom("DonkeyKongClassicsNESExtended", size: 8 * manager.deviceMulti))
+                .font(.custom("HelveticaNeue", size: 8 * manager.deviceMulti))
                 .foregroundStyle(.white)
         }.frame(width:70 * manager.deviceMulti)
     }

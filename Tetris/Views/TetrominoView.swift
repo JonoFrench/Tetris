@@ -19,9 +19,9 @@ struct TetrominoView: View {
                             let col = tetromino.tetrominioArray[row][col]
                             ZStack {
                                 if let col {
-                                    Rectangle()
+                                    RoundedRectangle(cornerRadius: 10.0)
                                         .fill(col)
-                                        .border(.black)
+                                        .stroke(.white, lineWidth: 2)
                                 }
                             }
                             .frame(width: manager.assetDimension, height: manager.assetDimension)

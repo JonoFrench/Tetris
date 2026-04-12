@@ -14,9 +14,12 @@ struct NextView: View {
     var next:ImageResource?
     var body: some View {
         VStack {
+            Spacer()
             Text("NEXT")
-                .font(.custom("DonkeyKongClassicsNESExtended", size: 12 * manager.deviceMulti))
+                .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
                 .foregroundStyle(.white)
+                .frame(maxWidth: .infinity,maxHeight: 20)
+                .multilineTextAlignment(.center)
             if let displayedImage {
                 Image(displayedImage)
                     .resizable()

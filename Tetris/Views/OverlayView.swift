@@ -26,7 +26,7 @@ struct OverlayView: View {
                 }
                 Spacer()
                 Text("Paused")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 18))
+                    .font(.custom("HelveticaNeue", size: 28 * manager.deviceMulti ))
                     .foregroundStyle(.white)
                 Spacer()
                 PlayButton(btnTxt: "Resume") {

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct Intro2View: View {
-    static var hstextSize:CGFloat = 10
+    static var hstextSize:CGFloat = 14
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
     @State private var topScores: [GameScore] = []
@@ -18,31 +18,31 @@ struct Intro2View: View {
     var body: some View {
         VStack {
             Text("High Scores")
-                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
+                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti))
                 .foregroundStyle(.red)
-            Spacer()
-            VStack(alignment: .leading, spacing: 12) {
+//            Spacer()
+            VStack(alignment: .leading, spacing: 6) {
                 
                 // HEADER
                 HStack {
-                    Text(" ").frame(width: 40 * manager.deviceMulti, alignment: .leading)                .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                    Text(" ").frame(width: 40 * manager.deviceMulti, alignment: .leading)                .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                         .foregroundStyle(.white)
                     Text("Name").frame(width: 60 * manager.deviceMulti, alignment: .leading)
-                        .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                        .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                    Text("Rows").frame(width: 60 * manager.deviceMulti, alignment: .trailing)
-                        .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                        .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                     Text("Level").frame(width: 70 * manager.deviceMulti, alignment: .trailing)
-                        .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                        .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                     Text("Score").frame(maxWidth: .infinity, alignment: .trailing)
-                        .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                        .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                             .foregroundStyle(.white)
                 }
                 .font(.headline)
                 
-                Divider()
+//                Divider()
                 
                 // ROWS
                 ForEach(topScores.indices, id: \.self) { index in
@@ -50,27 +50,27 @@ struct Intro2View: View {
                     
                     HStack {
                         Text("\(index + 1)")
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                            .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
                             .frame(width: 40 * manager.deviceMulti, alignment: .leading)
                         
                         Text(score.name)
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                            .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
                             .frame(width: 60 * manager.deviceMulti, alignment: .leading)
                         
                         Text("\(score.rows)")
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                            .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
                             .frame(width: 60, alignment: .trailing)
                         
                         Text("\(score.level)")
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                            .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
                             .frame(width: 70 * manager.deviceMulti, alignment: .trailing)
                         
                         Text("\(score.score)")
-                            .font(.custom("DonkeyKongClassicsNESExtended", size: Intro2View.hstextSize * manager.deviceMulti))
+                            .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
                                 .foregroundStyle(.white)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .bold()

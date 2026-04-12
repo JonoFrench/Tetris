@@ -18,11 +18,11 @@ struct ContentView: View {
     }
     var body: some View {
         ZStack(alignment: .top) {
-//            Color(.black).ignoresSafeArea()
+//            Color(.black).ignoresSafeArea() ///back2black
             LinearGradient(
-                colors: [Color.black,Color.purple.opacity(0.8)],
-                startPoint: .top,
-                endPoint: .bottom
+                colors: [Color.black,Color.blue.opacity(0.8)],
+                startPoint: .bottom,
+                endPoint: .top
             ).ignoresSafeArea()
 
                 .statusBar(hidden: true)
@@ -31,12 +31,13 @@ struct ContentView: View {
                 TopView()
                     .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
                     .zIndex(0.1)
-                    .background(manager.gameState == .intro ? .clear : .black)
+                    .background(manager.gameState == .intro ? .clear : .clear)
                 if manager.gameState == .intro {
                     IntroView().background(.clear)
                 } else {
                     GameView()
 //                        .background(.blue)
+                        .clipped()
                         .overlay() {
                             //background(.blue)
                             if manager.gameState == .paused {

@@ -10,8 +10,8 @@ import SwiftUI
 import Combine
 
 struct IntroView: View {
-    static var starttextSize:CGFloat = 14
-    static var helptextSize:CGFloat = 9
+    static var starttextSize:CGFloat = 28
+    static var helptextSize:CGFloat = 14
     @EnvironmentObject var manager: GameManager
 //    @State private var currentIndex = 0
     private let numberOfViews = 1
@@ -28,7 +28,7 @@ struct IntroView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
-                Spacer()
+//                Spacer()
                 SmoothCarousel(pages: [
                     AnyView(Intro1View()),
                     AnyView(Intro2View()),

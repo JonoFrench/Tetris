@@ -11,7 +11,7 @@ import UIKit
 
 struct ScreenView: View {
     @EnvironmentObject var manager: GameManager
-//    @ObservedObject var gameScreen: ScreenData
+    //    @ObservedObject var gameScreen: ScreenData
     var body: some View {
         ZStack(alignment: .center) {
             VStack(spacing: 0) {
@@ -21,13 +21,13 @@ struct ScreenView: View {
                             HStack(spacing: 0) {
                                 ForEach(0..<10, id: \.self) { x in
                                     if let c = manager.screenData[y+4][x] {
-                                        Rectangle()
+                                        RoundedRectangle(cornerRadius: 10.0)
                                             .fill(c)
-                                            .border(.black)
+                                            .stroke(.white, lineWidth: 2)
                                             .opacity(manager.clearingRows.contains(y+4) ? 0 : 1)      // fade out
                                             .scaleEffect(manager.clearingRows.contains(y+4) ? 0.01 : 1) // shrink
                                             .animation(.easeOut(duration: 0.5), value: manager.clearingRows)
-                                                                
+                                        
                                             .scaleEffect(manager.gameState == .gameending ? 0 : 1)
                                             .animation(.easeOut(duration: 1), value: manager.gameState == .gameending)
                                     } else {
@@ -36,30 +36,23 @@ struct ScreenView: View {
                                 }.frame(width: manager.assetDimension, height: manager.assetDimension)
                             }
                         }
-                    }.background(.black)
+                    }.background(
+                        Image("background")
+                            .resizable()
+                    )
                 }.anchorPreference(key: BoundsKey.self, value: .bounds) { $0 }
             }.backgroundPreferenceValue(BoundsKey.self) { anchor in
-            GeometryReader { proxy in
-                if let anchor {
-                    let frame = proxy[anchor]
-                    Color.clear.onAppear {
-                        manager.yPosOffset = (manager.gameSize.width - frame.width) / 2
-                        print("tetris ZStack frame size: \(frame) offset: \(manager.yPosOffset)")
+                GeometryReader { proxy in
+                    if let anchor {
+                        let frame = proxy[anchor]
+                        Color.clear.onAppear {
+                            manager.yPosOffset = (manager.gameSize.width - frame.width) / 2
+                            print("tetris ZStack frame size: \(frame) offset: \(manager.yPosOffset)")
+                        }
                     }
                 }
             }
-            }
-//            .overlay {
-//                background(.blue)
-//            }
-            //.border(.white, width: 1.0)
-//            .sideBorder(color: .yellow, width: 1, sides: .left, .right, .top, .bottom).zIndex(0.3)
-//            ZStack(alignment: .center) {
-//                if let currentTetrominio = manager.currentTetrominio {
-//                    TetrominoView(manager: _manager, tetromino: currentTetrominio)
-//                }
-//            }.zIndex(0.4)
-        }
+        }.clipped()
     }
 }
 

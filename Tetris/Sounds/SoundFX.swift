@@ -93,7 +93,8 @@ final class SoundFX {
     func clearRowSound() { playOnNewThread(SoundAsset.rowclear) }
     func gameOverSound() { playOnNewThread(SoundAsset.gameover) }
     // MARK: - Background Music
-    func backgroundSound() { playOnNewThread(SoundAsset.background, loops: -1) }
+    func backgroundSound() {
+        playOnNewThread(SoundAsset.background, loops: -1) }
     func stopBackgroundSound() { stop(SoundAsset.background) }
 
 

@@ -217,7 +217,7 @@ final class GameManager: ObservableObject {
     }
     
     func setTetronimo() {
-        guard gameState == .playing else { return }
+        guard gameState == .playing || gameState == .paused else { return }
         self.currentTetrominio = nextTetrominio
         tetroCounters[currentTetrominio!.kind.rawValue] += 1
         nextTetrominio = getTetronimo()

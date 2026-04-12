@@ -17,17 +17,13 @@ struct ButtonView: View {
                 Spacer()
                 VStack {
                     
-                    RoundedRectangle(cornerRadius: 25)
-                        .stroke(.white, lineWidth: 2)
-                        .fill(.red)
-                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
-                        .overlay(content: {
-                            Image("LeftArrow")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50 * manager.deviceMulti)
-                        })
-                        .onTapGesture {
+                    Image("btn_left")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: 100 * manager.deviceMulti,
+                            height: 50 * manager.deviceMulti
+                        ).onTapGesture {
                             if manager.gameState == .playing {
                                 print("Single tap - move")
                                 manager.currentTetrominio?.moveLeft()
@@ -36,17 +32,13 @@ struct ButtonView: View {
                             }
                         }
                     
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(.yellow)
-                        .stroke(.white, lineWidth: 2)
-                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
-                        .overlay(content: {
-                            Image("RotateL")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30 * manager.deviceMulti)
-                        })
-                        .onTapGesture {
+                    Image("btn_rotate_left")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: 100 * manager.deviceMulti,
+                            height: 50 * manager.deviceMulti
+                        ).onTapGesture {
                             if manager.gameState == .playing {
                                 print("Single tap - rotate")
                                 manager.rotateL()
@@ -61,7 +53,7 @@ struct ButtonView: View {
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Text("NEXT")
-                                .font(.custom("DonkeyKongClassicsNESExtended", size: 12 * manager.deviceMulti))
+                                .font(.custom("HelveticaNeue", size: 12 * manager.deviceMulti))
                                 .foregroundStyle(.white)
                         })
                         .onTapGesture {
@@ -76,17 +68,13 @@ struct ButtonView: View {
                 Spacer()
                 VStack {
                     
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(.red)
-                        .stroke(.white, lineWidth: 2)
-                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
-                        .overlay(content: {
-                            Image("RightArrow")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50 * manager.deviceMulti)
-                        })
-                        .onTapGesture {
+                    Image("btn_right")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: 100 * manager.deviceMulti,
+                            height: 50 * manager.deviceMulti
+                        ).onTapGesture {
                             if manager.gameState == .playing {
                                 print("Single tap - move")
                                 manager.currentTetrominio?.moveRight()
@@ -94,18 +82,13 @@ struct ButtonView: View {
                                 manager.letterUp()
                             }
                         }
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(.yellow)
-                        .stroke(.white, lineWidth: 2)
-                        .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
-                        
-                        .overlay(content: {
-                            Image("RotateR")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30 * manager.deviceMulti)
-                        })
-                        .onTapGesture {
+                    Image("btn_rotate_right")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: 100 * manager.deviceMulti,
+                            height: 50 * manager.deviceMulti
+                        ).onTapGesture {
                             if manager.gameState == .playing {
                                 print("Single tap - rotate")
                                 manager.rotateR()

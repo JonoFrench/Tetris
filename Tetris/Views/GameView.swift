@@ -19,14 +19,14 @@ struct GameView: View {
                             .background(Color.clear)
                             .allowsHitTesting(false)
                     )
-                    .onTapGesture {
+                    .onTapGesture(count: 2) {
                         if manager.gameState == .playing {
                             manager.gameState = .paused
                         }
                     }
                 //                    VStack(alignment: .center,spacing: 2) {
                 //                        Text("Stats")
-                //                            .font(.custom("DonkeyKongClassicsNESExtended", size: 8 * manager.deviceMulti))
+                //                            .font(.custom("HelveticaNeue", size: 8 * manager.deviceMulti))
                 //                            .foregroundStyle(.white)
                 //                        CountView(counter: manager.tetroCounters[0], img: ImageResource(name: "Itetromino", bundle: .main))
                 //                        CountView(counter: manager.tetroCounters[1], img: ImageResource(name: "Otetromino", bundle: .main))

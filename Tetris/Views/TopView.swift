@@ -11,18 +11,23 @@ struct TopView: View {
     @EnvironmentObject var manager: GameManager
     var body: some View {
         ZStack(alignment: .top) {
-            VStack {
+            VStack(alignment: .center, spacing: 2) {
                 Color(.clear)
                 Text("Score:\(String(format: "%07d", manager.score))")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 14 * manager.deviceMulti))
+                    .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
                     .foregroundStyle(manager.gameState != .intro ? .white : .clear)
+                    .frame(maxWidth: .infinity,maxHeight: 40)
+                    .multilineTextAlignment(.center)
                 Spacer()
-                Text("Level:\(String(format: "%03d", manager.level)) Lines:\(String(format: "%04d", manager.lines))")
-                    .font(.custom("DonkeyKongClassicsNESExtended", size: 14 * manager.deviceMulti))
+                Text("Level:\(String(format: "%02d", manager.level)) Lines:\(String(format: "%03d", manager.lines))")
+                    .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
                     .foregroundStyle(manager.gameState != .intro ? .white : .clear)
+                    .frame(maxWidth: .infinity,maxHeight: 40)
+                    .multilineTextAlignment(.center)
                 Spacer()
             }
-        }
+            
+        }.background(.clear)
     }
 }
 

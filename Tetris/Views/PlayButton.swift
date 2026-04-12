@@ -23,7 +23,7 @@ struct PlayButton: View {
 //            }
         }) {
             Text(btnTxt)
-                .font(.custom("DonkeyKongClassicsNESExtended", size: IntroView.starttextSize * manager.deviceMulti))
+                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti))
                 //.font(.system(size: 28, weight: .heavy, design: .rounded))
                 .foregroundColor(.white)
                 .padding(.vertical, 18)
