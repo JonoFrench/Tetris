@@ -36,32 +36,30 @@ struct ScreenView: View {
                                 }.frame(width: manager.assetDimension, height: manager.assetDimension)
                             }
                         }
-                    }.background(
+                    }
+                    .background(
                         Image("background")
                             .resizable()
+                            .scaledToFill()
                     )
-                }.anchorPreference(key: BoundsKey.self, value: .bounds) { $0 }
-            }.backgroundPreferenceValue(BoundsKey.self) { anchor in
-                GeometryReader { proxy in
-                    if let anchor {
-                        let frame = proxy[anchor]
-                        Color.clear.onAppear {
-                            manager.yPosOffset = (manager.gameSize.width - frame.width) / 2
-                            print("tetris ZStack frame size: \(frame) offset: \(manager.yPosOffset)")
-                        }
-                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.white, lineWidth: 1)
+                            .background(Color.clear)
+                            .allowsHitTesting(false)
+                    )
                 }
             }
         }.clipped()
     }
 }
 
-struct BoundsKey: PreferenceKey {
-    static var defaultValue: Anchor<CGRect>? = nil
-    static func reduce(value: inout Anchor<CGRect>?, nextValue: () -> Anchor<CGRect>?) {
-        value = nextValue()
-    }
-}
+//struct BoundsKey: PreferenceKey {
+//    static var defaultValue: Anchor<CGRect>? = nil
+//    static func reduce(value: inout Anchor<CGRect>?, nextValue: () -> Anchor<CGRect>?) {
+//        value = nextValue()
+//    }
+//}
 
 struct SideBorder: ViewModifier {
     var color: Color = .black

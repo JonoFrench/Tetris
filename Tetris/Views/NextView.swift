@@ -37,7 +37,12 @@ struct NextView: View {
             }
         }
         .onTapGesture {
-            manager.currentTetrominio?.dropMove = true
+            /// dont drop if we're too close
+            if let currentTetrominio = manager.currentTetrominio {
+                if (currentTetrominio.checkBoard()) {
+                    manager.currentTetrominio?.dropMove = true
+                }
+            }
         }
     }
     

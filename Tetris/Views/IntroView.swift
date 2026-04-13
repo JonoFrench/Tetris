@@ -27,7 +27,7 @@ struct IntroView: View {
                 Image("LogoTetroids")
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: .infinity)
+                    .frame(width: (proxy.size.width / 4) * 3)
 //                Spacer()
                 SmoothCarousel(pages: [
                     AnyView(Intro1View()),
@@ -35,7 +35,12 @@ struct IntroView: View {
                     AnyView(Intro3View())
                 ])
                 Spacer()
-                
+                PlayButton(btnTxt: "TAP TO PLAY") {
+                    if manager.gameState == .intro {
+                        manager.startGame()
+                    }
+                }
+                Spacer()
             }.onTapGesture {
                 if manager.gameState == .intro {
                     manager.startGame()

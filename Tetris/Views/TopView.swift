@@ -28,6 +28,8 @@ struct TopView: View {
             }
             
         }.background(.clear)
+//            .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
+
     }
 }
 

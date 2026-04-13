@@ -11,66 +11,62 @@ import SwiftData
 struct ContentView: View {
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
-    func startGame() {
-        if manager.gameState == .intro {
-            manager.startGame()
-        }
-    }
+
     var body: some View {
-        ZStack(alignment: .top) {
-//            Color(.black).ignoresSafeArea() ///back2black
+        ZStack {
             LinearGradient(
-                colors: [Color.black,Color.blue.opacity(0.8)],
+                colors: [Color.black, Color.blue.opacity(0.8)],
                 startPoint: .bottom,
                 endPoint: .top
-            ).ignoresSafeArea()
+            )
+            .ignoresSafeArea()
 
-                .statusBar(hidden: true)
-            VStack(spacing: 0) {
-                Spacer()
-                TopView()
-                    .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
-                    .zIndex(0.1)
-                    .background(manager.gameState == .intro ? .clear : .clear)
-                if manager.gameState == .intro {
-                    IntroView().background(.clear)
-                } else {
-                    GameView()
-//                        .background(.blue)
-                        .clipped()
-                        .overlay() {
-                            //background(.blue)
-                            if manager.gameState == .paused {
-                                OverlayView()
-                            } else if manager.gameState == .gameover {
-                                GameOverView()
-                                    .onTapGesture {
-                                        manager.gameState = .intro
-                                    }
-                            }  else if manager.gameState == .highscore {
-                                NewHighScoreView()
-                                    .background(.clear)
-                                    .zIndex(1.0)
-                            }
-                        }
-                }
-                if manager.gameState != .intro {
-                    ButtonView()
-                        .frame(width: UIScreen.main.bounds.width,height: manager.buttonHeight, alignment: .center)
-                        .zIndex(0.1)
-                        .background(.clear)
-                } else {
-                    Spacer()
-                    PlayButton(btnTxt: "TAP TO PLAY") {
-                        if manager.gameState == .intro {
-                            manager.startGame()
-                        }
+            if manager.gameState == .intro {
+                IntroView()
+            } else {
+                GameView()
+                    .clipped()
+                    .overlay {
+                        overlayView
                     }
-                    Spacer()
-                }
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        TopView()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: manager.topHeight)
+                            .background(.clear)
+                    }
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        ButtonView()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: manager.buttonHeight)
+                            .background(.clear)
+                    }
             }
-        }.onAppear{
+        }
+        .statusBar(hidden: true)
+        .onAppear {
             manager.context = context
+        }
+    }
+
+    @ViewBuilder
+    private var overlayView: some View {
+        switch manager.gameState {
+        case .paused:
+            OverlayView()
+
+        case .gameover:
+            GameOverView()
+                .onTapGesture {
+                    manager.gameState = .intro
+                }
+
+        case .highscore:
+            NewHighScoreView()
+                .background(.clear)
+
+        default:
+            EmptyView()
         }
     }
 }

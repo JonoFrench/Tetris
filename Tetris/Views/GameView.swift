@@ -13,32 +13,15 @@ struct GameView: View {
         ZStack(alignment: .center) {
             HStack(alignment: .center) {
                 ScreenView()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.white, lineWidth: 1)
-                            .background(Color.clear)
-                            .allowsHitTesting(false)
-                    )
+                    .frame(width: manager.assetDimension * 10,height: manager.assetDimension * 20)
                     .onTapGesture(count: 2) {
                         if manager.gameState == .playing {
                             manager.gameState = .paused
                         }
                     }
-                //                    VStack(alignment: .center,spacing: 2) {
-                //                        Text("Stats")
-                //                            .font(.custom("HelveticaNeue", size: 8 * manager.deviceMulti))
-                //                            .foregroundStyle(.white)
-                //                        CountView(counter: manager.tetroCounters[0], img: ImageResource(name: "Itetromino", bundle: .main))
-                //                        CountView(counter: manager.tetroCounters[1], img: ImageResource(name: "Otetromino", bundle: .main))
-                //                        CountView(counter: manager.tetroCounters[2], img: ImageResource(name: "Stetromino", bundle: .main))
-                //                        CountView(counter: manager.tetroCounters[3], img: ImageResource(name: "Ztetromino", bundle: .main))
-                //                        CountView(counter: manager.tetroCounters[4], img: ImageResource(name: "Ttetromino", bundle: .main))
-                //                        CountView(counter: manager.tetroCounters[5], img: ImageResource(name: "Jtetromino", bundle: .main))
-                //                        CountView(counter: manager.tetroCounters[6], img: ImageResource(name: "Ltetromino", bundle: .main))
-                //                    }.frame(width: manager.deviceType == .iPad ? 100 : 80 * manager.deviceMulti)
             }
             if let currentTetrominio = manager.currentTetrominio {
-                TetrominoView(manager: _manager, tetromino: currentTetrominio)
+                TetrominoView(tetromino: currentTetrominio)
                     .zIndex(0.1)
             }
         }

@@ -102,7 +102,7 @@ final class GameManager: ObservableObject {
             buttonHeight = 220.0
             deviceMulti = 1.8
             statBox = 100.0
-            screenDimensionY = 22.0
+            screenDimensionY = 20.0
             print("ipad")
         } else {
             deviceType = .iPhone
@@ -125,7 +125,11 @@ final class GameManager: ObservableObject {
     }
     
     func setInit() {
-        assetDimension = gameSize.height / screenDimensionY
+        let height = gameSize.height - topHeight - buttonHeight
+        assetDimension = height / screenDimensionY
+        print("assetDimension = \(height / screenDimensionY)")
+        print("height = \(height)")
+        print("screenDimensionY = \(screenDimensionY)")
         assetDimensionStep = assetDimension / GameConstants.Speed.tileSteps
         level = startLevel
         score = 0
