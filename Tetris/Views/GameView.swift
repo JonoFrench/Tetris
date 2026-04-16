@@ -24,6 +24,9 @@ struct GameView: View {
                 TetrominoView(tetromino: currentTetrominio)
                     .zIndex(0.1)
             }
+        }.onReceive(NotificationCenter.default.publisher(
+            for: UIScene.willEnterForegroundNotification)) { _ in
+                manager.gameState = .paused
         }
     }
 }
