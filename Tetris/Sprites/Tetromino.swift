@@ -88,6 +88,8 @@ class Tetromino: TetrominoProtocol {
         guard !stopmove else {
             return
         }
+        if movingLeftFlag {movingLeft()}
+        if movingRightFlag {movingRight()}
         if dropMove {
             let dropDiff = Int(currentSpeed) - self.speedCounter
             self.dropMove = false
@@ -128,19 +130,43 @@ class Tetromino: TetrominoProtocol {
         }
         return false
     }
-    
+    var movingLeftFlag = false
+    var movingLeftCount = 0
     func moveLeft() {
         if manager.canMove(tetromino: self, dx: -1, dy: 0, board: manager.screenData) {
-            xPos -= 1
-            self.position.x -= manager.assetDimension
-            print("moveLeft yes")
+            movingLeftFlag = true
+            movingLeftCount = 0
         }
     }
     
+    func movingLeft() {
+        guard movingLeftFlag else {return}
+        self.position.x -= manager.assetDimension / 4
+        movingLeftCount += 1
+        if movingLeftCount == 4 {
+            xPos -= 1
+            movingLeftFlag = false
+            print("moveLeft yes")
+        }
+    }
+
+    var movingRightFlag = false
+    var movingRightCount = 0
+
     func moveRight() {
         if manager.canMove(tetromino: self, dx: +1, dy: 0, board: manager.screenData) {
+            movingRightFlag = true
+            movingRightCount = 0
+        }
+    }
+
+    func movingRight() {
+        guard movingRightFlag else {return}
+        self.position.x += manager.assetDimension / 4
+        movingRightCount += 1
+        if movingRightCount == 4 {
             xPos += 1
-            self.position.x += manager.assetDimension
+            movingRightFlag = false
             print("moveRight yes")
         }
     }
