@@ -16,7 +16,20 @@ struct GameOverView: View {
                 Spacer()
                 Text("Game Over")
                     .font(.custom("HelveticaNeue", size: 36 * manager.deviceMulti))
-                    .foregroundStyle(.red)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [
+                                Color.red,
+                                Color.pink,
+                                Color.orange,
+                                Color.yellow,
+                                Color.green,
+                                Color.blue
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                 Spacer()
                 Text("Tap to")
                     .font(.custom("HelveticaNeue", size: 28 * manager.deviceMulti ))

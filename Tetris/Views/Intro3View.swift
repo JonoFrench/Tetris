@@ -13,8 +13,8 @@ struct Intro3View: View {
         VStack(alignment: .leading, spacing: 4) {
             
             Text("How to Play")
-                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti))
-                .foregroundStyle(.red)
+                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
+                .foregroundStyle(manager.grad)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
             Spacer()
@@ -62,18 +62,19 @@ struct Intro3View: View {
                 .padding(.horizontal, 16)
             Spacer()
             Text("Goal")
-                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti))
-                .foregroundStyle(.red)
+                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
+                .foregroundStyle(manager.grad)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
 
-            Spacer()
+//            Spacer()
             Text("Clear as many lines as possible and keep the board from filling up.")
                 .font(.custom("HelveticaNeue", size: IntroView.helptextSize * manager.deviceMulti))
                 .foregroundStyle(.white)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 16)
+            Spacer()
         }
     }
 }

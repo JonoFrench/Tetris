@@ -14,14 +14,18 @@ struct TopView: View {
             VStack(alignment: .center, spacing: 2) {
                 Color(.clear)
                 Text("Score:\(String(format: "%07d", manager.score))")
-                    .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
-                    .foregroundStyle(manager.gameState != .intro ? .white : .clear)
+                    .font(.custom("HelveticaNeue", size: 26 * manager.deviceMulti))
+                    .foregroundStyle(manager.gameState != .intro ? manager.gradOtoY : LinearGradient(colors: [.clear],
+                                                                                                     startPoint:.top,
+                                                                                                     endPoint:.bottom))
                     .frame(maxWidth: .infinity,maxHeight: 40)
                     .multilineTextAlignment(.center)
-                Spacer()
+//                Spacer()
                 Text("Level:\(String(format: "%02d", manager.level)) Lines:\(String(format: "%03d", manager.lines))")
-                    .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
-                    .foregroundStyle(manager.gameState != .intro ? .white : .clear)
+                    .font(.custom("HelveticaNeue", size: 26 * manager.deviceMulti))
+                    .foregroundStyle(manager.gameState != .intro ? manager.gradOtoY : LinearGradient(colors: [.clear],
+                                                                                                     startPoint:.top,
+                                                                                                     endPoint:.bottom))
                     .frame(maxWidth: .infinity,maxHeight: 40)
                     .multilineTextAlignment(.center)
                 Spacer()

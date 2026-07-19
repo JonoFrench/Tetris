@@ -11,7 +11,7 @@ import SwiftData
 struct ContentView: View {
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
-
+    
     var body: some View {
         ZStack {
             LinearGradient(
@@ -20,7 +20,7 @@ struct ContentView: View {
                 endPoint: .top
             )
             .ignoresSafeArea()
-
+            
             if manager.gameState == .intro {
                 IntroView()
             } else {
@@ -48,23 +48,30 @@ struct ContentView: View {
             manager.context = context
         }
     }
-
+    
     @ViewBuilder
     private var overlayView: some View {
+/// 4 Lines removed show Tetroid!
+        if manager.showTetroid {
+            TetroidView(message: "Tetroid!")
+        }
+
         switch manager.gameState {
+        case .gameending:
+            TetroidView(message: "Game Over")
         case .paused:
             OverlayView()
-
+            
         case .gameover:
             GameOverView()
                 .onTapGesture {
                     manager.gameState = .intro
                 }
-
+            
         case .highscore:
             NewHighScoreView()
                 .background(.clear)
-
+            
         default:
             EmptyView()
         }

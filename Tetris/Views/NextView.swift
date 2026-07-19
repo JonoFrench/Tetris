@@ -17,7 +17,7 @@ struct NextView: View {
             Spacer()
             Text("NEXT")
                 .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
-                .foregroundStyle(.white)
+                .foregroundStyle(manager.grad)
                 .frame(maxWidth: .infinity,maxHeight: 20)
                 .multilineTextAlignment(.center)
             if let displayedImage {

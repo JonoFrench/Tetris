@@ -32,6 +32,20 @@ final class GameManager: ObservableObject {
     @Published var clearingRows: Set<Int> = []
     @Published var currentTetrominio: Tetromino?
     
+    var latestScore: Int {
+        get { UserDefaults.standard.integer(forKey: "latestScore") }
+        set { UserDefaults.standard.set(newValue, forKey: "latestScore") }
+    }
+
+    var latestLevel: Int {
+        get { UserDefaults.standard.integer(forKey: "latestLevel") }
+        set { UserDefaults.standard.set(newValue, forKey: "latestLevel") }
+    }
+
+    var latestLines: Int {
+        get { UserDefaults.standard.integer(forKey: "latestLines") }
+        set { UserDefaults.standard.set(newValue, forKey: "latestLines") }
+    }
     let soundFX:SoundFX = SoundFX()
     let screenDimensionX = 10
     var screenDimensionY = 20.0
@@ -94,7 +108,27 @@ final class GameManager: ObservableObject {
     var highScoreLetters:[Character] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 //    var hiScores:[HighScores] = []
     var context: ModelContext?
-    
+    let grad = LinearGradient(
+        colors: [
+            Color.red,
+            Color.pink,
+            Color.orange,
+            Color.yellow,
+            Color.green,
+            Color.blue
+        ],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    let gradOtoY = LinearGradient(
+        colors: [
+            Color.orange,
+            Color.yellow,
+        ],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+
     init() {
         if UIDevice.current.userInterfaceIdiom == .pad {
             deviceType = .iPad
@@ -310,6 +344,9 @@ final class GameManager: ObservableObject {
         soundFX.stopBackgroundSound()
         soundFX.gameOverSound()
         gameState = .gameending
+        latestScore = score
+        latestLines = lines
+        latestLevel = level
         
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(1.0))
@@ -432,12 +469,17 @@ final class GameManager: ObservableObject {
         grid = Array(repeating: emptyRow, count: removedCount) + nonFullRows
     }
     
+    var showTetroid = false
+    
     private func clearFullRows() {
         let rowsToClear = detectFullRows(in: self.screenData)
         withAnimation {
             clearingRows = Set(rowsToClear)
             if !clearingRows.isEmpty {
                 self.soundFX.clearRowSound()
+            }
+            if clearingRows.count == 4 {
+                showTetroid = true
             }
         }
         Task { @MainActor in
@@ -446,6 +488,10 @@ final class GameManager: ObservableObject {
                 self.compactRows(in: &self.screenData)
             }
             self.clearingRows.removeAll()
+        }
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.5))
+            showTetroid = false
         }
     }
     

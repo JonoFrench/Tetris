@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct Intro2View: View {
-    static var hstextSize:CGFloat = 14
+    static var hstextSize:CGFloat = 16
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
     @State private var topScores: [GameScore] = []
@@ -18,27 +18,27 @@ struct Intro2View: View {
     var body: some View {
         VStack {
             Text("High Scores")
-                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti))
-                .foregroundStyle(.red)
+                .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
+                .foregroundStyle(manager.grad)
 //            Spacer()
             VStack(alignment: .leading, spacing: 6) {
                 
                 // HEADER
                 HStack {
-                    Text(" ").frame(width: 40 * manager.deviceMulti, alignment: .leading)                .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
-                        .foregroundStyle(.white)
+                    Text("#").frame(width: 40 * manager.deviceMulti, alignment: .leading)                .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
+                        .foregroundStyle(manager.gradOtoY)
                     Text("Name").frame(width: 60 * manager.deviceMulti, alignment: .leading)
                         .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
-                            .foregroundStyle(.white)
+                        .foregroundStyle(manager.gradOtoY)
                    Text("Rows").frame(width: 60 * manager.deviceMulti, alignment: .trailing)
                         .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(manager.gradOtoY)
                     Text("Level").frame(width: 70 * manager.deviceMulti, alignment: .trailing)
                         .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(manager.gradOtoY)
                     Text("Score").frame(maxWidth: .infinity, alignment: .trailing)
                         .font(.custom("HelveticaNeue", size: Intro2View.hstextSize * manager.deviceMulti))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(manager.gradOtoY)
                 }
                 .font(.headline)
                 
