@@ -31,7 +31,8 @@ struct ButtonView: View {
                                 manager.letterDown()
                             }
                         }
-                    
+                        .opacity(manager.gameState == .playing ? 1:0.5)
+
                     Image("btn_rotate_left")
                         .resizable()
                         .scaledToFit()
@@ -44,6 +45,7 @@ struct ButtonView: View {
                                 manager.rotateL()
                             }
                         }
+                        .opacity(manager.gameState == .playing ? 1:0.5)
                 }
                 Spacer()
                 if manager.gameState == .highscore {
@@ -61,8 +63,10 @@ struct ButtonView: View {
                         }
                     
                 } else if let nextTetrominio = manager.nextTetrominio {
-                    let nextResource = ImageResource(name: "\(nextTetrominio.kind)tetromino", bundle: .main)
-                    NextView(next:nextResource)
+                    if manager.gameState == .playing || manager.gameState == .paused {
+                        let nextResource = ImageResource(name: "\(nextTetrominio.kind)tetromino", bundle: .main)
+                        NextView(next:nextResource)
+                    }
                 }
                 
                 Spacer()
@@ -82,6 +86,7 @@ struct ButtonView: View {
                                 manager.letterUp()
                             }
                         }
+                        .opacity(manager.gameState == .playing ? 1:0.5)
                     Image("btn_rotate_right")
                         .resizable()
                         .scaledToFit()
@@ -94,6 +99,7 @@ struct ButtonView: View {
                                 manager.rotateR()
                             }
                         }
+                        .opacity(manager.gameState == .playing ? 1:0.5)
                 }
                 Spacer()
             }

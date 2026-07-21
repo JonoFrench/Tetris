@@ -124,6 +124,7 @@ final class GameManager: ObservableObject {
         colors: [
             Color.orange,
             Color.yellow,
+            Color.orange
         ],
         startPoint: .leading,
         endPoint: .trailing
@@ -349,7 +350,7 @@ final class GameManager: ObservableObject {
         latestLevel = level
         
         Task { @MainActor in
-            try? await Task.sleep(for: .seconds(1.0))
+            try? await Task.sleep(for: .seconds(2.0))
             clearScreen()
             if isTop10(score: score, context: context!) {
                 letterIndex = 0

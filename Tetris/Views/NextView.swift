@@ -16,7 +16,7 @@ struct NextView: View {
         VStack {
             Spacer()
             Text("NEXT")
-                .font(.custom("HelveticaNeue", size: 20 * manager.deviceMulti))
+                .font(.custom("HelveticaNeue", size: 28 * manager.deviceMulti).bold())
                 .foregroundStyle(manager.grad)
                 .frame(maxWidth: .infinity,maxHeight: 20)
                 .multilineTextAlignment(.center)

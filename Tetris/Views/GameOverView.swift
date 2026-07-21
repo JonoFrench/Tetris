@@ -15,7 +15,7 @@ struct GameOverView: View {
             VStack(alignment: .center) {
                 Spacer()
                 Text("Game Over")
-                    .font(.custom("HelveticaNeue", size: 36 * manager.deviceMulti))
+                    .font(.custom("HelveticaNeue", size: 40 * manager.deviceMulti).bold())
                     .foregroundStyle(
                         LinearGradient(
                             colors: [
@@ -32,14 +32,14 @@ struct GameOverView: View {
                     )
                 Spacer()
                 Text("Tap to")
-                    .font(.custom("HelveticaNeue", size: 28 * manager.deviceMulti ))
-                    .foregroundStyle(.white)
+                    .font(.custom("HelveticaNeue", size: 32 * manager.deviceMulti ).bold())
+                    .foregroundStyle(manager.gradOtoY)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Text("Continue")
-                    .font(.custom("HelveticaNeue", size: 28 * manager.deviceMulti))
-                    .foregroundStyle(.white)
+                    .font(.custom("HelveticaNeue", size: 32 * manager.deviceMulti).bold())
+                    .foregroundStyle(manager.gradOtoY)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
 

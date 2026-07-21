@@ -29,7 +29,7 @@ struct ScreenView: View {
                                             .animation(.easeOut(duration: 0.5), value: manager.clearingRows)
                                         
                                             .scaleEffect(manager.gameState == .gameending ? 0 : 1)
-                                            .animation(.easeOut(duration: 1), value: manager.gameState == .gameending)
+                                            .animation(.easeOut(duration: 1.5), value: manager.gameState == .gameending)
                                     } else {
                                         Rectangle().fill(.clear)
                                     }

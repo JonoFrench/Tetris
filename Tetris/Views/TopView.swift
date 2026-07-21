@@ -14,7 +14,7 @@ struct TopView: View {
             VStack(alignment: .center, spacing: 2) {
                 Color(.clear)
                 Text("Score:\(String(format: "%07d", manager.score))")
-                    .font(.custom("HelveticaNeue", size: 26 * manager.deviceMulti))
+                    .font(.custom("HelveticaNeue", size: 26 * manager.deviceMulti).bold())
                     .foregroundStyle(manager.gameState != .intro ? manager.gradOtoY : LinearGradient(colors: [.clear],
                                                                                                      startPoint:.top,
                                                                                                      endPoint:.bottom))
@@ -22,7 +22,7 @@ struct TopView: View {
                     .multilineTextAlignment(.center)
 //                Spacer()
                 Text("Level:\(String(format: "%02d", manager.level)) Lines:\(String(format: "%03d", manager.lines))")
-                    .font(.custom("HelveticaNeue", size: 26 * manager.deviceMulti))
+                    .font(.custom("HelveticaNeue", size: 26 * manager.deviceMulti).bold())
                     .foregroundStyle(manager.gameState != .intro ? manager.gradOtoY : LinearGradient(colors: [.clear],
                                                                                                      startPoint:.top,
                                                                                                      endPoint:.bottom))
@@ -30,9 +30,12 @@ struct TopView: View {
                     .multilineTextAlignment(.center)
                 Spacer()
             }
-            
         }.background(.clear)
-//            .frame(width: UIScreen.main.bounds.width,height: manager.topHeight, alignment: .center)
+            .overlay(
+                ZStack {
+//                    Color.black.opacity(0.4)
+                }
+            )
 
     }
 }
