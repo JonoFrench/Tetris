@@ -47,6 +47,24 @@ final class GameManager: ObservableObject {
         set { UserDefaults.standard.set(newValue, forKey: "latestLines") }
     }
     let soundFX:SoundFX = SoundFX()
+    
+    var soundEnabled: Bool {
+        get {
+            UserDefaults.standard.object(forKey: "soundEnabled") as? Bool ?? true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "soundEnabled")
+        }
+    }
+    var fxEnabled: Bool {
+        get {
+            UserDefaults.standard.object(forKey: "fxEnabled") as? Bool ?? true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "fxEnabled")
+        }
+    }
+
     let screenDimensionX = 10
     var screenDimensionY = 20.0
     let arrayDimentionY = 24 // bigger than visible to allow us to position blocks off screen
@@ -94,6 +112,8 @@ final class GameManager: ObservableObject {
     var tetroPick:[ColorArray] = []
     var tetroKind:[Kind] = []
     var deviceType:Device = .iPhone
+//    var topHeight = 60.0
+//    var buttonHeight = 120.0
     var topHeight = 60.0
     var buttonHeight = 120.0
     var deviceMulti = 1.0
@@ -129,7 +149,18 @@ final class GameManager: ObservableObject {
         startPoint: .leading,
         endPoint: .trailing
     )
+    let gradWtoG = LinearGradient(
+        colors: [
+            Color.white,
+            Color.gray,
+            Color.white
+        ],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
 
+    var origin:CGPoint = CGPoint()
+    
     init() {
         if UIDevice.current.userInterfaceIdiom == .pad {
             deviceType = .iPad
@@ -170,16 +201,18 @@ final class GameManager: ObservableObject {
         score = 0
         lines = 0
         updateDropSpeed(for: level)
+        setScreenData()
     }
     
     func startGame() {
-        setScreenData()
         gameState = .playing
-        soundFX.backgroundSound()
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.5))
-            setTetronimo()
+        if soundEnabled {
+            soundFX.backgroundSound()
         }
+ //       Task { @MainActor in
+ //           try? await Task.sleep(for: .seconds(0.5))
+  //          setTetronimo()
+  //      }
     }
     
     @objc func nextTetromino(notification: Notification) {
@@ -187,9 +220,9 @@ final class GameManager: ObservableObject {
         clearFullRows()
     }
     
-    @objc func gameOver(notification: Notification) {
-        //        gameState = .gameover
-    }
+//    @objc func gameOver(notification: Notification) {
+//        //        gameState = .gameover
+//    }
     
     func scoreFor(lines: Int, level: Int) -> Int {
         let base: Int
@@ -281,69 +314,16 @@ final class GameManager: ObservableObject {
     func setScreenData() {
         clearScreen()
         tetroCounters = [0,0,0,0,0,0,0]
-        nextTetrominio = getTetronimo()
-        
-        //        screenData[23][0] = .red
-        //        screenData[23][1] = .red
-        //        screenData[23][2] = .red
-        //        screenData[23][3] = .red
-        //        screenData[23][4] = .orange
-        //        screenData[23][6] = .orange
-        //        screenData[23][7] = .red
-        //        screenData[23][8] = .red
-        //        screenData[23][9] = .red
-        //
-        //        screenData[22][0] = .red
-        //        screenData[22][1] = .red
-        //        screenData[22][2] = .red
-        //        screenData[22][3] = .red
-        //        screenData[22][4] = .red
-        //        screenData[22][6] = .red
-        //        screenData[22][7] = .red
-        //        screenData[22][8] = .red
-        //        screenData[22][9] = .red
-        //
-        //        screenData[21][0] = .red
-        //        screenData[20][0] = .red
-        //        screenData[19][0] = .red
-        //        screenData[18][0] = .red
-        //        screenData[17][0] = .red
-        //        screenData[16][0] = .red
-        //        screenData[15][0] = .red
-        //        screenData[14][0] = .red
-        //        screenData[13][0] = .red
-        //        screenData[12][0] = .red
-        //        screenData[11][0] = .red
-        //        screenData[10][0] = .red
-        //        screenData[9][0] = .red
-        //        screenData[8][0] = .red
-        //        screenData[7][0] = .red
-        //        screenData[6][0] = .red
-        //        screenData[5][0] = .red
-        //        screenData[4][0] = .purple
-        //        screenData[3][0] = .green
-        //        screenData[2][0] = .blue
-        //        screenData[1][0] = .yellow
-        //        screenData[0][0] = .yellow
-        
-        
-        //        screenData[27][9] = .blue
-        //        screenData[8][0] = .yellow
-        //        screenData[8][9] = .green
-        //
-        //        placeTetromino(large: &screenData, block: oTetrominio, atX: 6, y: 8)
-        //        placeTetromino(large: &screenData, block: iTetrominio, atX: 1, y: 13)
-        //        placeTetromino(large: &screenData, block: sTetrominio, atX: 3, y: 16)
-        //        placeTetromino(large: &screenData, block: zTetrominio, atX: 4, y: 18)
-        //        placeTetromino(large: &screenData, block: lTetrominio, atX: 5, y: 5)
-        //        placeTetromino(large: &screenData, block: jTetrominio, atX: 6, y: 12)
-        //        placeTetromino(large: &screenData, block: tTetrominio, atX: 0, y: 10)
-        
+        nextTetrominio = getTetronimo()        
     }
     
     func gameOver() {
-        soundFX.stopBackgroundSound()
-        soundFX.gameOverSound()
+        if soundEnabled {
+            soundFX.stopBackgroundSound()
+        }
+        if fxEnabled {
+            soundFX.gameOverSound()
+        }
         gameState = .gameending
         latestScore = score
         latestLines = lines
@@ -477,7 +457,9 @@ final class GameManager: ObservableObject {
         withAnimation {
             clearingRows = Set(rowsToClear)
             if !clearingRows.isEmpty {
-                self.soundFX.clearRowSound()
+                if fxEnabled {
+                    self.soundFX.clearRowSound()
+                }
             }
             if clearingRows.count == 4 {
                 showTetroid = true
@@ -575,7 +557,7 @@ extension GameManager {
     
     func setNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.nextTetromino(notification:)), name: .notificationNextTetromino, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.gameOver(notification:)), name: .notificationGameOver, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.gameOver(notification:)), name: .notificationGameOver, object: nil)
         
     }
 }

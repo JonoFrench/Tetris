@@ -76,6 +76,7 @@ final class SoundFX {
     
     // MARK: - Playback Control
     @objc private func play(audioPlayer: AVAudioPlayer) {
+        audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
     

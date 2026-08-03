@@ -17,7 +17,7 @@ struct Intro3View: View {
                 .foregroundStyle(manager.grad)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
-            Spacer()
+//            Spacer()
             Text("1. Tetroids fall from the top of the screen.")
                 .font(.custom("HelveticaNeue", size: IntroView.helptextSize * manager.deviceMulti))
                 .foregroundStyle(.white)

@@ -15,7 +15,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [Color.black, Color.blue.opacity(0.8)],
+                colors: [Color.black, Color.blue.opacity(1.0)],
                 startPoint: .bottom,
                 endPoint: .top
             )
@@ -24,23 +24,38 @@ struct ContentView: View {
             if manager.gameState == .intro {
                 IntroView()
             } else {
-                GameView()
-                    .clipped()
-                    .overlay {
-                        overlayView
-                    }
-                    .safeAreaInset(edge: .top, spacing: 0) {
-                        TopView()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: manager.topHeight)
-                            .background(.clear)
-                    }
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        ButtonView()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: manager.buttonHeight)
-                            .background(.clear)
-                    }
+                //                GameView()
+                //                    .clipped()
+                //                    .overlay {
+                //                        overlayView
+                //                    }
+                //                    .safeAreaInset(edge: .top, spacing: 0) {
+                //                        TopView()
+                //                            .frame(maxWidth: .infinity)
+                //                            .frame(height: manager.topHeight)
+                //                            .background(.clear)
+                //                    }
+                //                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                //                        ButtonView()
+                //                            .frame(maxWidth: .infinity)
+                //                            .frame(height: manager.buttonHeight)
+                //                            .background(.clear)
+                //                    }
+                VStack {
+                    TopView()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: manager.topHeight)
+                        .background(.clear)
+                    GameView()
+                        .clipped()
+                        .overlay {
+                            overlayView
+                        }
+                    ButtonView()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: manager.buttonHeight)
+                        .background(.clear)
+                }
             }
         }
         .statusBar(hidden: true)
@@ -55,23 +70,18 @@ struct ContentView: View {
         if manager.showTetroid {
             TetroidView(message: "Tetroid!")
         }
-
         switch manager.gameState {
         case .gameending:
             TetroidView(message: "Game Over")
         case .paused:
             OverlayView()
-            
         case .gameover:
             GameOverView()
                 .onTapGesture {
                     manager.gameState = .intro
                 }
-            
         case .highscore:
             NewHighScoreView()
-                .background(.clear)
-            
         default:
             EmptyView()
         }

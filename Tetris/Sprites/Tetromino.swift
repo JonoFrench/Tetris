@@ -23,12 +23,12 @@ class Tetromino: TetrominoProtocol {
     var xPos: Int {
         get { _xPos }
         set {
-            print("xPos changing from \(_xPos) to \(newValue)")
+//            print("xPos changing from \(_xPos) to \(newValue)")
             _xPos = newValue
-            if _xPos == -3 {
-                print("xPos is -3")
-
-            }
+//            if _xPos == -3 {
+//                print("xPos is -3")
+//
+//            }
         }
     }
     //var xPos:Int = 0
@@ -78,10 +78,13 @@ class Tetromino: TetrominoProtocol {
             //8
             deviceOffset = Int(24 + manager.assetDimension)
         }
-        self.position = CGPoint(x: Double(xPos + deviceAssetDimension) * manager.assetDimension + Double(deviceOffset), y: Double(yPos-3) * manager.assetDimension)
         self.moveDistance = manager.assetDimension / currentSpeed
         self.kind = kind
         self.xPos = xPos
+        //+ (Double(self.xPos) * manager.assetDimension)
+        self.position = CGPoint(x: manager.origin.x + (Double( 2 + self.xPos) * manager.assetDimension), y: Double(yPos-3) * manager.assetDimension)
+        print("xpos \(self.xPos) originX \(manager.origin.x) position \(self.position)")
+//        self.position = CGPoint(x: Double(xPos + deviceAssetDimension) * manager.assetDimension + Double(deviceOffset), y: Double(yPos-3) * manager.assetDimension)
     }
     
     func move() {

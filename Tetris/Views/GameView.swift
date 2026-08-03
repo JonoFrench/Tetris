@@ -11,19 +11,25 @@ struct GameView: View {
     @EnvironmentObject var manager: GameManager
     var body: some View {
         ZStack(alignment: .center) {
-            HStack(alignment: .center) {
+//            ZStack(alignment: .center) {
                 ScreenView()
                     .frame(width: manager.assetDimension * 10,height: manager.assetDimension * 20)
-                    .onTapGesture(count: 2) {
+                    .onTapGesture(count: 3) {
                         if manager.gameState == .playing {
                             manager.gameState = .paused
                         }
                     }
-            }
-            if let currentTetrominio = manager.currentTetrominio {
-                TetrominoView(tetromino: currentTetrominio)
-                    .zIndex(0.1)
-            }
+                //                    .border(.red)
+                
+                if let currentTetrominio = manager.currentTetrominio {
+                    if manager.gameState == .playing {
+                        ZStack {
+                            TetrominoView(tetromino: currentTetrominio)
+                                .zIndex(0.1)
+                        }
+                    }
+                }
+//            }
         }.onReceive(NotificationCenter.default.publisher(
             for: UIScene.willEnterForegroundNotification)) { _ in
                 manager.gameState = .paused

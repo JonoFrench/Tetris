@@ -9,11 +9,11 @@ import SwiftUI
 
 struct NewHighScoreView: View {
 #if os(iOS)
-    static var titleTextSize:CGFloat = 24
-    static var subTitleTextSize:CGFloat = 14
+    static var titleTextSize:CGFloat = 40
+    static var subTitleTextSize:CGFloat = 30
     static var letterTextSize:CGFloat = 38
     static var starttextSize:CGFloat = 18
-    static var infoTextSize:CGFloat = 12
+    static var infoTextSize:CGFloat = 24
 #elseif os(tvOS)
     static var titleTextSize:CGFloat = 72
     static var subTitleTextSize:CGFloat = 56
@@ -29,56 +29,59 @@ struct NewHighScoreView: View {
             VStack {
                 Spacer()
                 Text("Game Over")
-                    .foregroundStyle(.yellow)
-                    .font(.custom("HelveticaNeue", size: NewHighScoreView.titleTextSize))
+                    .foregroundStyle(manager.grad)
+                    .font(.custom("HelveticaNeue", size: NewHighScoreView.titleTextSize).bold())
                 Spacer()
-                Text("New High Score")
-                    .foregroundStyle(.red)
-                    .font(.custom("HelveticaNeue", size: NewHighScoreView.subTitleTextSize))
+                Text("New High Score!")
+                    .foregroundStyle(manager.gradOtoY)
+                    .font(.custom("HelveticaNeue", size: NewHighScoreView.subTitleTextSize).bold())
                 Spacer()
                 Text("Enter your")
-                    .foregroundStyle(.white)
-                    .font(.custom("HelveticaNeue", size: NewHighScoreView.subTitleTextSize))
+                    .foregroundStyle(manager.gradWtoG)
+                    .font(.custom("HelveticaNeue", size: NewHighScoreView.subTitleTextSize).bold())
                 Text("initials")
-                    .foregroundStyle(.white)
-                    .font(.custom("HelveticaNeue", size: NewHighScoreView.subTitleTextSize))
+                    .foregroundStyle(manager.gradWtoG)
+                    .font(.custom("HelveticaNeue", size: NewHighScoreView.subTitleTextSize).bold())
 
                 //Spacer()
                 
                 HStack {
                     Spacer()
                     Text(String(manager.letterArray[0]))
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(manager.gradOtoY)
                         .font(.custom("HelveticaNeue", size: NewHighScoreView.letterTextSize))
                         .padding() // Add some padding around the letter
-                        .border(manager.letterIndex == 0 ? Color.red : Color.white , width: 2)
+                        .frame(width:70)
+                        .border(manager.letterIndex == 0 ? manager.grad : manager.gradWtoG , width: 2)
                     Spacer()
                     Text(String(manager.letterArray[1]))
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(manager.gradOtoY)
                         .font(.custom("HelveticaNeue", size: NewHighScoreView.letterTextSize))
                         .padding() // Add some padding around the letter
-                        .border(manager.letterIndex == 1 ? Color.red : Color.white, width: 2)
+                        .frame(width:70)
+                        .border(manager.letterIndex == 1 ? manager.grad : manager.gradWtoG, width: 2)
                     Spacer()
                     Text(String(manager.letterArray[2]))
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(manager.gradOtoY)
                         .font(.custom("HelveticaNeue", size: NewHighScoreView.letterTextSize))
                         .padding() // Add some padding around the letter
-                        .border(manager.letterIndex == 2 ? Color.red : Color.white, width: 2)
+                        .frame(width:70)
+                        .border(manager.letterIndex == 2 ? manager.grad : manager.gradWtoG, width: 2)
                     Spacer()
                     
                 }
                 Spacer()
                 Text("Press Left / Right")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(manager.gradWtoG)
                     .font(.custom("HelveticaNeue", size: NewHighScoreView.infoTextSize))
                 Spacer()
-                Text("Next to select")
-                    .foregroundStyle(.red)
+                Text("Next to Select")
+                    .foregroundStyle(manager.gradWtoG)
                     .font(.custom("HelveticaNeue", size: NewHighScoreView.infoTextSize))
                 
                 Spacer()
-            }.background(.clear)
-        }
+            }//.background(.clear)
+        }.zIndex(1.0)
     }
 }
 

@@ -31,7 +31,7 @@ struct ButtonView: View {
                                 manager.letterDown()
                             }
                         }
-                        .opacity(manager.gameState == .playing ? 1:0.5)
+                        .opacity(manager.gameState == .playing || manager.gameState == .highscore ? 1:0.5)
 
                     Image("btn_rotate_left")
                         .resizable()
@@ -50,13 +50,13 @@ struct ButtonView: View {
                 Spacer()
                 if manager.gameState == .highscore {
                     RoundedRectangle(cornerRadius: 25)
-                        .fill(.red)
+                        .fill(manager.gradOtoY)
                         .stroke(.white, lineWidth: 2)
                         .frame(width: 100 * manager.deviceMulti, height: 50 * manager.deviceMulti)
                         .overlay(content: {
                             Text("NEXT")
-                                .font(.custom("HelveticaNeue", size: 12 * manager.deviceMulti))
-                                .foregroundStyle(.white)
+                                .font(.custom("HelveticaNeue", size: 18 * manager.deviceMulti).bold())
+                                .foregroundStyle(.black)
                         })
                         .onTapGesture {
                             nextLetter()
@@ -86,7 +86,7 @@ struct ButtonView: View {
                                 manager.letterUp()
                             }
                         }
-                        .opacity(manager.gameState == .playing ? 1:0.5)
+                        .opacity(manager.gameState == .playing || manager.gameState == .highscore ? 1:0.5)
                     Image("btn_rotate_right")
                         .resizable()
                         .scaledToFit()
