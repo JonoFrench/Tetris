@@ -41,6 +41,7 @@ class Tetromino: TetrominoProtocol {
     var moveDistance = 0.0
     var currentSpeed = 20.0
     var speedCounter: Int = 0
+    @Published
     var stopmove = false
     var dropMove = false
     var deviceOffset = 8

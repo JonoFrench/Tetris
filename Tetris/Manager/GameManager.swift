@@ -65,6 +65,15 @@ final class GameManager: ObservableObject {
         }
     }
 
+    var thumpEnabled: Bool {
+        get {
+            UserDefaults.standard.object(forKey: "thumpEnabled") as? Bool ?? true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "thumpEnabled")
+        }
+    }
+
     let screenDimensionX = 10
     var screenDimensionY = 20.0
     let arrayDimentionY = 24 // bigger than visible to allow us to position blocks off screen
@@ -372,24 +381,33 @@ final class GameManager: ObservableObject {
                 }
             }
         }
+        tactileFeedback(style: .heavy)
+        if fxEnabled {
+            soundFX.placeSound()
+        }
     }
     
     func addBoard() {
         if let currentTetrominio {
             placeTetromino(large: &screenData, block: currentTetrominio.tetrominioArray, atX:currentTetrominio.xPos, y: currentTetrominio.yPos) //7
-            self.currentTetrominio = nil
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(0.5))
+                self.currentTetrominio = nil
+            }
         }
     }
     
     func rotateL() {
         if let currentTetrominio {
             currentTetrominio.rotateTetromino(tet: &self.currentTetrominio!, grid: screenData, direction: .ccw)
+            tactileFeedback(style: .medium)
         }
     }
     
     func rotateR() {
         if let currentTetrominio {
             currentTetrominio.rotateTetromino(tet: &self.currentTetrominio!, grid: screenData, direction: .cw)
+            tactileFeedback(style: .medium)
         }
     }
     
@@ -491,6 +509,12 @@ final class GameManager: ObservableObject {
         return result
     }
     
+    func tactileFeedback(style:UIImpactFeedbackGenerator.FeedbackStyle) {
+        guard thumpEnabled else { return }
+        let impactMed = UIImpactFeedbackGenerator(style: style)
+        impactMed.impactOccurred()
+    }
+    
     func addScore(rows: Int, score: Int, level: Int, name: String) {
         let gameScore = GameScore(timestamp: Date(), rows:rows,score: score,level: level,name: "")
         gameScore.rows = rows
@@ -502,6 +526,7 @@ final class GameManager: ObservableObject {
         
         do {
             try context!.save()
+            tactileFeedback(style: .heavy)
         } catch {
             print("Failed to save: \(error)")
         }

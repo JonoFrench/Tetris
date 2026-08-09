@@ -30,6 +30,7 @@ struct ButtonView: View {
                             } else if manager.gameState == .highscore {
                                 manager.letterDown()
                             }
+                            manager.tactileFeedback(style: .soft)
                         }
                         .opacity(manager.gameState == .playing || manager.gameState == .highscore ? 1:0.5)
 
@@ -44,6 +45,7 @@ struct ButtonView: View {
                                 print("Single tap - rotate")
                                 manager.rotateL()
                             }
+                            manager.tactileFeedback(style: .soft)
                         }
                         .opacity(manager.gameState == .playing ? 1:0.5)
                 }
@@ -85,6 +87,7 @@ struct ButtonView: View {
                             } else if manager.gameState == .highscore {
                                 manager.letterUp()
                             }
+                            manager.tactileFeedback(style: .soft)
                         }
                         .opacity(manager.gameState == .playing || manager.gameState == .highscore ? 1:0.5)
                     Image("btn_rotate_right")
@@ -98,6 +101,7 @@ struct ButtonView: View {
                                 print("Single tap - rotate")
                                 manager.rotateR()
                             }
+                            manager.tactileFeedback(style: .soft)
                         }
                         .opacity(manager.gameState == .playing ? 1:0.5)
                 }

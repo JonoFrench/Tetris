@@ -22,6 +22,9 @@ struct TetrominoView: View {
                                     RoundedRectangle(cornerRadius: 10.0)
                                         .fill(col)
                                         .stroke(.white, lineWidth: 2)
+                                        .opacity(tetromino.stopmove ? 0 : 1)
+                                        .scaleEffect(tetromino.stopmove ? 2 : 1)
+                                        .animation(.easeOut(duration: 0.5), value: tetromino.stopmove)
                                 }
                             }
                             .frame(width: manager.assetDimension, height: manager.assetDimension)

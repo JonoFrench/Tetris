@@ -15,6 +15,7 @@ struct IntroView: View {
     @EnvironmentObject var manager: GameManager
     @AppStorage("soundEnabled") private var soundEnabled = true
     @AppStorage("fxEnabled") private var fxEnabled = true
+    @AppStorage("thumpEnabled") private var thumpEnabled = true
     @State private var showSettings = false
     private let numberOfViews = 1
     private let pages:[AnyView] = [
@@ -25,30 +26,11 @@ struct IntroView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .topTrailing) {
-
-                // Your existing content
-
-                Button {
-                    showSettings.toggle()
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .font(.title)
-                        .padding(12)
-                        .foregroundStyle(.white)
-                        .background(.ultraThinMaterial, in: Circle())
-                }
-                .padding()
-                .popover(isPresented: $showSettings) {
-                    SettingsPopup(soundEnabled: $soundEnabled,fxEnabled: $fxEnabled)
-                }
-            }
-            VStack(alignment: .center) {
-                    //                Spacer()
+                VStack(alignment: .center) {
                     Image("LogoTetroids")
                         .resizable()
                         .scaledToFit()
                         .frame(width: (proxy.size.width / 4) * 3)
-                    //                Spacer()
                     SmoothCarousel(pages: [
                         AnyView(Intro1View()),
                         AnyView(Intro2View()),
@@ -60,13 +42,8 @@ struct IntroView: View {
                             manager.startGame()
                         }
                     }
-//                    .onTapGesture {
-//                        if manager.gameState == .intro {
-//                            manager.startGame()
-//                        }
-//                    }
                     Spacer()
-                
+                    
                 }
                 .onAppear {
                     print("game size \(proxy.size)")
@@ -74,16 +51,32 @@ struct IntroView: View {
                     manager.setInit()
                 }.background(.clear)
                     .frame(maxWidth: .infinity)
+                
+                Button {
+                    showSettings.toggle()
+                } label: {
+                    Image(systemName: "gearshape.fill")
+                        .font(.title)
+//                        .padding(12)
+                        .foregroundStyle(.white)
+                        .background(.ultraThinMaterial, in: Circle())
+                }
+                .padding()
+                .popover(isPresented: $showSettings) {
+                    SettingsPopup(soundEnabled: $soundEnabled,fxEnabled: $fxEnabled,thumpEnabled: $thumpEnabled)
+                }
             }
-        
+        }
+
     }
-    
 }
 
 struct SettingsPopup: View {
     @Binding var soundEnabled: Bool
     @Binding var fxEnabled: Bool
+    @Binding var thumpEnabled: Bool
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var manager: GameManager
 
     var body: some View {
         NavigationStack {
@@ -93,6 +86,9 @@ struct SettingsPopup: View {
                     .foregroundStyle(.white)
                 Spacer()
                 Toggle("Sound FX", isOn: $fxEnabled)
+                    .foregroundStyle(.white)
+                Spacer()
+                Toggle("Tactile", isOn: $thumpEnabled)
                     .foregroundStyle(.white)
 
 //                Button("Done") {
@@ -108,19 +104,31 @@ struct SettingsPopup: View {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.systemIndigo))
             )
-            .navigationTitle("Settings")
+//            .navigationTitle("Settings")
+            .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
+            .foregroundStyle(manager.gradOtoY)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Settings")
+                        .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
+                        .foregroundStyle(manager.grad)
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
                         dismiss()
                     }
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .background(Color.blue)
+                    .clipShape(Capsule())
                 }
             }
         }
         .presentationBackground(
             LinearGradient(
-                colors: [.indigo, .purple],
+                colors: [.black, .blue],
                 startPoint: .top,
                 endPoint: .bottom
             )
