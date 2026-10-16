@@ -28,10 +28,13 @@ final class GameManager: ObservableObject {
         }
     }
     @Published var level = 0
+    @Published var gamesCompleted = 0
     @Published var screenData:ColorArray = [[]]
     @Published var clearingRows: Set<Int> = []
     @Published var currentTetrominio: Tetromino?
-    
+    @AppStorage("hasRequestedReview")
+    var hasRequestedReview = false
+
     var latestScore: Int {
         get { UserDefaults.standard.integer(forKey: "latestScore") }
         set { UserDefaults.standard.set(newValue, forKey: "latestScore") }
@@ -327,6 +330,7 @@ final class GameManager: ObservableObject {
     }
     
     func gameOver() {
+        gamesCompleted += 1
         if soundEnabled {
             soundFX.stopBackgroundSound()
         }

@@ -7,11 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct ContentView: View {
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
-    
+
     var body: some View {
         ZStack {
             LinearGradient(

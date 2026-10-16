@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import StoreKit
 
 struct IntroView: View {
     static var starttextSize:CGFloat = 28
@@ -16,6 +17,7 @@ struct IntroView: View {
     @AppStorage("soundEnabled") private var soundEnabled = true
     @AppStorage("fxEnabled") private var fxEnabled = true
     @AppStorage("thumpEnabled") private var thumpEnabled = true
+    @Environment(\.requestReview) private var requestReview
     @State private var showSettings = false
     private let numberOfViews = 1
     private let pages:[AnyView] = [
@@ -49,6 +51,11 @@ struct IntroView: View {
                     print("game size \(proxy.size)")
                     manager.gameSize = proxy.size
                     manager.setInit()
+                    if !manager.hasRequestedReview && manager.gamesCompleted >= 2 {
+                        manager.hasRequestedReview = true
+                        requestReview()
+                    }
+
                 }.background(.clear)
                     .frame(maxWidth: .infinity)
                 
