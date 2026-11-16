@@ -15,6 +15,7 @@ public enum GameState {
 public enum GameConstants {
     
     public enum Game {
+        public static let backgrounds = 11
         public static let tilesWide = 10.0
         public static let tilesHigh = 20.0
     }

@@ -20,7 +20,6 @@ struct Intro2View: View {
             Text("High Scores")
                 .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
                 .foregroundStyle(manager.grad)
-//            Spacer()
             VStack(alignment: .leading, spacing: 6) {
                 
                 // HEADER

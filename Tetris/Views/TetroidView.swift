@@ -22,9 +22,9 @@ struct TetroidView: View {
                     .scaleEffect(scale)
                     .opacity(opacity)
                     .onAppear {
-                        withAnimation(.easeOut(duration: 1.5)) {
+                        withAnimation(.easeInOut(duration: 1.5)) {
                             scale = 3.0
-                            opacity = 0.0
+                            opacity = 0
                         }
                     }
                 Spacer()

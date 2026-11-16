@@ -205,9 +205,9 @@ final class GameManager: ObservableObject {
     func setInit() {
         let height = gameSize.height - topHeight - buttonHeight
         assetDimension = height / screenDimensionY
-        print("assetDimension = \(height / screenDimensionY)")
-        print("height = \(height)")
-        print("screenDimensionY = \(screenDimensionY)")
+//        print("assetDimension = \(height / screenDimensionY)")
+//        print("height = \(height)")
+//        print("screenDimensionY = \(screenDimensionY)")
         assetDimensionStep = assetDimension / GameConstants.Speed.tileSteps
         level = startLevel
         score = 0
@@ -221,20 +221,12 @@ final class GameManager: ObservableObject {
         if soundEnabled {
             soundFX.backgroundSound()
         }
- //       Task { @MainActor in
- //           try? await Task.sleep(for: .seconds(0.5))
-  //          setTetronimo()
-  //      }
     }
     
     @objc func nextTetromino(notification: Notification) {
         self.setTetronimo()
         clearFullRows()
     }
-    
-//    @objc func gameOver(notification: Notification) {
-//        //        gameState = .gameover
-//    }
     
     func scoreFor(lines: Int, level: Int) -> Int {
         let base: Int
@@ -360,11 +352,11 @@ final class GameManager: ObservableObject {
     /// Places a block into a larger 2D array at (x, y),
     /// skipping out-of-bounds writes and skipping nils in the block.
     func placeTetromino(large: inout ColorArray,block: ColorArray,atX x: Int,y: Int) {
-        print("placeTetromino at x\(x) y \(y)")
+//        print("placeTetromino at x\(x) y \(y)")
         ///If we are placing tetromino at pos less than 4 then thats offscreen, so game over.
         if y < 4  {
             gameOver()
-            print("placeTetromino game over")
+//            print("placeTetromino game over")
             return
         }
         
@@ -451,7 +443,10 @@ final class GameManager: ObservableObject {
         
         return true
     }
-    
+    var showTetroid = false
+    var showEmpty = false
+
+
     func compactRows(in grid: inout ColorArray) {
         guard !grid.isEmpty else { return }
         
@@ -470,9 +465,17 @@ final class GameManager: ObservableObject {
         //    - Start with empty rows at the top
         //    - Append the kept (non-full) rows below
         grid = Array(repeating: emptyRow, count: removedCount) + nonFullRows
+        
+        if nonFullRows.count == 0 {
+            /// woo empty grid
+            score += 100000
+            showEmpty = true
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(2))
+                showEmpty = false
+            }
+        }
     }
-    
-    var showTetroid = false
     
     private func clearFullRows() {
         let rowsToClear = detectFullRows(in: self.screenData)
@@ -495,7 +498,7 @@ final class GameManager: ObservableObject {
             self.clearingRows.removeAll()
         }
         Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.5))
+            try? await Task.sleep(for: .seconds(2))
             showTetroid = false
         }
     }

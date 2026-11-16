@@ -31,12 +31,11 @@ struct TopView: View {
                 Spacer()
             }
         }.background(.clear)
-            .overlay(
-                ZStack {
-//                    Color.black.opacity(0.4)
-                }
-            )
-
+//            .overlay(
+//                ZStack {
+////                    Color.black.opacity(0.4)
+//                }
+//            )
     }
 }
 

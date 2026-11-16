@@ -5,7 +5,6 @@
 //  Created by Jonathan French on 30.11.25.
 //
 
-
 import SwiftUI
 import Combine
 import StoreKit
@@ -28,6 +27,17 @@ struct IntroView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .topTrailing) {
+                TetroidBurstView(trigger: 0)
+                    .zIndex(0.1)
+                TetroidBurstView(trigger: 0)
+                    .zIndex(0.1)
+                TetroidBurstView(trigger: 0)
+                    .zIndex(0.1)
+                TetroidBurstView(trigger: 0)
+                    .zIndex(0.1)
+                StarBurstView(trigger: 0)
+                    .zIndex(0.1)
+
                 VStack(alignment: .center) {
                     Image("LogoTetroids")
                         .resizable()
@@ -35,20 +45,22 @@ struct IntroView: View {
                         .frame(width: (proxy.size.width / 4) * 3)
                     SmoothCarousel(pages: [
                         AnyView(Intro1View()),
+                        AnyView(IntroBackView()),
                         AnyView(Intro2View()),
-                        AnyView(Intro3View())
-                    ])
+                        AnyView(IntroBackView()),
+                        AnyView(Intro3View()),
+                        AnyView(IntroBackView())
+                   ])
                     Spacer()
-                    PlayButton(btnTxt: "TAP TO PLAY") {
+                    PlayButton(btnTxt: "Lets Play!") {
                         if manager.gameState == .intro {
                             manager.startGame()
                         }
                     }
                     Spacer()
-                    
                 }
                 .onAppear {
-                    print("game size \(proxy.size)")
+//                    print("game size \(proxy.size)")
                     manager.gameSize = proxy.size
                     manager.setInit()
                     if !manager.hasRequestedReview && manager.gamesCompleted >= 2 {
@@ -64,8 +76,7 @@ struct IntroView: View {
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .font(.title)
-//                        .padding(12)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(manager.grad)
                         .background(.ultraThinMaterial, in: Circle())
                 }
                 .padding()
@@ -74,7 +85,6 @@ struct IntroView: View {
                 }
             }
         }
-
     }
 }
 
@@ -97,12 +107,6 @@ struct SettingsPopup: View {
                 Spacer()
                 Toggle("Tactile", isOn: $thumpEnabled)
                     .foregroundStyle(.white)
-
-//                Button("Done") {
-//                    dismiss()
-//                }
-//                .buttonStyle(.borderedProminent)
-
                 Spacer()
             }
             .padding()
@@ -111,7 +115,6 @@ struct SettingsPopup: View {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.systemIndigo))
             )
-//            .navigationTitle("Settings")
             .font(.custom("HelveticaNeue", size: IntroView.starttextSize * manager.deviceMulti).bold())
             .foregroundStyle(manager.gradOtoY)
             .navigationBarTitleDisplayMode(.inline)

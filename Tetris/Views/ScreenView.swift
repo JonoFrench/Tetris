@@ -37,17 +37,14 @@ struct ScreenView: View {
                                 }
                             }
                         }
-                        .background(
-                            Image("background")
-                                .resizable()
-                                .scaledToFill()
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.white, lineWidth: 1)
-                                .background(Color.clear)
-                                .allowsHitTesting(false)
-                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(.white, lineWidth: 4)
+                                .contentShape(RoundedRectangle(cornerRadius: 12))
+                                .onTapGesture(count: 2) {
+                                    manager.gameState = .paused
+                                }
+                        }
                     }
                 }
             }.clipped()

@@ -20,12 +20,14 @@ struct NextView: View {
                 .foregroundStyle(manager.grad)
                 .frame(maxWidth: .infinity,maxHeight: 20)
                 .multilineTextAlignment(.center)
+                .zIndex(1.0)
             if let displayedImage {
                 Image(displayedImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 80 * manager.deviceMulti, height: 80 * manager.deviceMulti)
+                    .frame(width: 74 * manager.deviceMulti, height: 74 * manager.deviceMulti)
                     .scaleEffect(scale)
+                    .zIndex(1.5)
             }
         }
         .onAppear {

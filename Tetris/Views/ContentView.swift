@@ -16,7 +16,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [Color.black, Color.blue.opacity(1.0)],
+                colors: [Color.black, Color.black],
                 startPoint: .bottom,
                 endPoint: .top
             )
@@ -25,23 +25,6 @@ struct ContentView: View {
             if manager.gameState == .intro {
                 IntroView()
             } else {
-                //                GameView()
-                //                    .clipped()
-                //                    .overlay {
-                //                        overlayView
-                //                    }
-                //                    .safeAreaInset(edge: .top, spacing: 0) {
-                //                        TopView()
-                //                            .frame(maxWidth: .infinity)
-                //                            .frame(height: manager.topHeight)
-                //                            .background(.clear)
-                //                    }
-                //                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                //                        ButtonView()
-                //                            .frame(maxWidth: .infinity)
-                //                            .frame(height: manager.buttonHeight)
-                //                            .background(.clear)
-                //                    }
                 VStack {
                     TopView()
                         .frame(maxWidth: .infinity)
@@ -67,12 +50,26 @@ struct ContentView: View {
     
     @ViewBuilder
     private var overlayView: some View {
-/// 4 Lines removed show Tetroid!
-        if manager.showTetroid {
-            TetroidView(message: "Tetroid!")
-        }
+        /// 4 Lines removed show Tetroid!
+                if manager.showTetroid {
+                    TetroidView(message: "Tetroid!")
+                }
+        /// All Lines removed show Tetroid!
+                if manager.showEmpty {
+                    TetroidView(message: "Clear Grid! \n100000")
+                }
         switch manager.gameState {
+        case .playing:
+            StarBurstView(trigger: 0)
+                .zIndex(0.1)
+            StarBurstView(trigger: 0)
+                .zIndex(0.1)
+            StarBurstView(trigger: 0)
+                .zIndex(0.1)
         case .gameending:
+            RoundedRectangle(cornerRadius: 10.0)
+                .fill(.clear)
+
             TetroidView(message: "Game Over")
         case .paused:
             OverlayView()
