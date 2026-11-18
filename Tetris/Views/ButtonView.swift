@@ -11,6 +11,11 @@ import SwiftData
 struct ButtonView: View {
     @EnvironmentObject var manager: GameManager
     @Environment(\.modelContext) private var context
+    @State private var leftHoldTask: Task<Void, Never>?
+    @State private var rightHoldTask: Task<Void, Never>?
+
+    @State private var isHoldingLeft = false
+    @State private var isHoldingRight = false
     var body: some View {
         VStack {
             HStack {
@@ -23,14 +28,39 @@ struct ButtonView: View {
                         .frame(
                             width: 100 * manager.deviceMulti,
                             height: 50 * manager.deviceMulti
-                        ).onTapGesture {
-                            if manager.gameState == .playing {
-                                print("Single tap - move")
-                                manager.currentTetrominio?.moveLeft()
-                            } else if manager.gameState == .highscore {
-                                manager.letterDown()
-                            }
-                            manager.tactileFeedback(style: .soft)
+                        ).gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { _ in
+
+                                    guard !isHoldingLeft else { return }
+                                    isHoldingLeft = true
+
+                                    // Immediate first movement
+                                    moveLeft()
+                                    manager.tactileFeedback(style: .soft)
+
+                                    // Start repeat task
+                                    leftHoldTask = Task { @MainActor in
+
+                                        // Initial delay before repeating
+                                        try? await Task.sleep(for: .milliseconds(350))
+
+                                        // Continue while button is held
+                                        while !Task.isCancelled {
+                                            moveLeft()
+                                            try? await Task.sleep(for: .milliseconds(100))
+                                        }
+                                    }
+                                }
+                                .onEnded { _ in
+                                    isHoldingLeft = false
+                                    leftHoldTask?.cancel()
+                                    leftHoldTask = nil
+                                }
+                        )
+                        .onDisappear {
+                            leftHoldTask?.cancel()
+                            leftHoldTask = nil
                         }
                         .opacity(manager.gameState == .playing || manager.gameState == .highscore ? 1:0.5)
 
@@ -80,14 +110,39 @@ struct ButtonView: View {
                         .frame(
                             width: 100 * manager.deviceMulti,
                             height: 50 * manager.deviceMulti
-                        ).onTapGesture {
-                            if manager.gameState == .playing {
-                                print("Single tap - move")
-                                manager.currentTetrominio?.moveRight()
-                            } else if manager.gameState == .highscore {
-                                manager.letterUp()
-                            }
-                            manager.tactileFeedback(style: .soft)
+                        ).gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { _ in
+
+                                    guard !isHoldingRight else { return }
+                                    isHoldingRight = true
+
+                                    // Immediate first movement
+                                    moveRight()
+                                    manager.tactileFeedback(style: .soft)
+
+                                    // Start repeat task
+                                    rightHoldTask = Task { @MainActor in
+
+                                        // Initial delay before repeating
+                                        try? await Task.sleep(for: .milliseconds(350))
+
+                                        // Continue while button is held
+                                        while !Task.isCancelled {
+                                            moveRight()
+                                            try? await Task.sleep(for: .milliseconds(100))
+                                        }
+                                    }
+                                }
+                                .onEnded { _ in
+                                    isHoldingRight = false
+                                    rightHoldTask?.cancel()
+                                    rightHoldTask = nil
+                                }
+                        )
+                        .onDisappear {
+                            rightHoldTask?.cancel()
+                            rightHoldTask = nil
                         }
                         .opacity(manager.gameState == .playing || manager.gameState == .highscore ? 1:0.5)
                     Image("btn_rotate_right")
@@ -125,6 +180,21 @@ struct ButtonView: View {
             context.insert(score)
             try? context.save()
             manager.gameState = .intro
+        }
+    }
+    private func moveRight() {
+        if manager.gameState == .playing {
+            manager.currentTetrominio?.moveRight()
+        } else if manager.gameState == .highscore {
+            manager.letterUp()
+        }
+    }
+    
+    private func moveLeft() {
+        if manager.gameState == .playing {
+            manager.currentTetrominio?.moveLeft()
+        } else if manager.gameState == .highscore {
+            manager.letterDown()
         }
     }
 }

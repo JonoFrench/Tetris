@@ -9,9 +9,11 @@ import SwiftUI
 
 struct GameView: View {
     @EnvironmentObject var manager: GameManager
-    var backgroundImage: String {
-        "background\(manager.level % GameConstants.Game.backgrounds)"
-    }
+    @State private var currentBackground = "background1"
+    @State private var previousBackground: String?
+//    var backgroundImage: String {
+//        "background\(manager.level % GameConstants.Game.backgrounds)"
+//    }
     var body: some View {
         ZStack(alignment: .center) {
             ScreenView()
@@ -27,31 +29,50 @@ struct GameView: View {
                         RoundedRectangle(cornerRadius: 1.0)
                             .fill(.clear)
                     }
-
                 }
             } else {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 1.0)
-                            .fill(.clear)
-                    }
+                ZStack {
+                    RoundedRectangle(cornerRadius: 1.0)
+                        .fill(.clear)
                 }
-        }.onReceive(NotificationCenter.default.publisher(
+            }
+        }.background {
+            ZStack {
+                if let previousBackground {
+                    Image(previousBackground)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                }
+
+                Image(currentBackground)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+            }
+            .clipped()
+        }
+        .onChange(of: manager.level) { oldValue, newValue in
+            changeBackground(to: (newValue % GameConstants.Game.backgrounds) + 1)
+        }
+        .onReceive(NotificationCenter.default.publisher(
             for: UIScene.willEnterForegroundNotification)) { _ in
                 manager.gameState = .paused
             }
-        .background {
-                ZStack {
-                    ForEach(1...GameConstants.Game.backgrounds, id: \.self) { index in
-                        Image("background\(index)")
-                            .resizable()
-                            .scaledToFit()
-                            .opacity(backgroundImage == "background\(index)" ? 1 : 0)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                .animation(.easeInOut(duration: 1.2), value: backgroundImage)
-                .clipped()
-            }
+    }
+    
+    func changeBackground(to number: Int) {
+        let newBackground = "background\(number)"
+
+        previousBackground = currentBackground
+
+        withAnimation(.easeInOut(duration: 1.2)) {
+            currentBackground = newBackground
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            previousBackground = nil
+        }
     }
 }
 
